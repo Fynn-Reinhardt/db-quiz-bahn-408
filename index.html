@@ -1,2067 +1,241 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DB Quiz-Bahn – 408 Fahrdienstvorschrift</title>
-<style>
-:root{
-  --db-red:#ec0016;--db-dark:#1d1d1b;--rail:#5d6268;--steel:#aeb4b8;
-  --bg:#eef1f3;--card:#fff;--green:#16803c;--yellow:#f5b800;--blue:#1769aa;--orange:#e66a19;
-}
-*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(#f4f6f7,#dfe4e7);color:#202124}
-header{background:var(--db-red);color:#fff;padding:14px 22px;display:flex;justify-content:space-between;align-items:center;gap:15px;box-shadow:0 3px 12px #0003}
-.logo{font-weight:900;font-size:26px;letter-spacing:-1px}.logo span{background:#fff;color:var(--db-red);padding:2px 7px;border-radius:2px;margin-right:7px}
-header small{opacity:.9}
-main{max-width:1250px;margin:18px auto;padding:0 14px;display:grid;grid-template-columns:minmax(500px,1fr) 380px;gap:18px}
-.panel{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 5px 20px #0002}
-.board-wrap{overflow:auto}
-.board{width:min(720px,92vw);aspect-ratio:1;margin:auto;position:relative;background:#dfe3e5;border:12px solid #292c2f;border-radius:18px;box-shadow:inset 0 0 0 5px #777,0 8px 20px #0003}
-.track{position:absolute;inset:15%;border:34px solid #777;border-radius:50%;background:
- radial-gradient(circle,#e8ecee 0 42%,transparent 43%),
- repeating-conic-gradient(from 0deg,#b8bdc1 0 3deg,#646a70 3deg 6deg);
- box-shadow:inset 0 0 0 5px #404348}
-.track:before,.track:after{content:"";position:absolute;inset:-17px;border:3px dashed #e6e8e9;border-radius:50%}
-.track:after{inset:17px;border:2px solid #2c3034}
-.center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:30%;height:30%;background:#fff;border:7px solid #222;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;font-size:clamp(12px,2vw,22px);z-index:2}
-.center .train{font-size:38px;display:block}
-.token{position:absolute;width:30px;height:30px;border:3px solid #222;border-radius:50%;box-shadow:0 3px 7px #0007;z-index:5;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0;font-weight:bold;transition:.35s;transform-origin:center;line-height:1}.token:before{content:"";position:absolute;inset:6px;border-radius:50%;background:#fff;opacity:.28}.token:after{content:""}.t0{background:#ec0016}.t1{background:#1769aa}.t2{background:#16803c}.t3{background:#f5b800;color:#222}
-.crossing{position:absolute;width:42px;height:42px;border:3px solid #222;border-radius:8px;background:#fff;z-index:3;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 7px #0006;font-size:24px;transform:translate(-50%,-50%)}
-.crossing::before{content:"";position:absolute;width:30px;height:5px;background:#fff;border-top:3px solid #222;border-bottom:3px solid #222;transform:rotate(45deg)}
-.crossing::after{content:"🚧";position:relative;z-index:2;font-size:22px}
-.hazard-box{display:none;margin:12px 0;padding:16px;border-radius:12px;background:#fff3cd;border:4px solid #f5b800;box-shadow:0 4px 12px #0002}.hazard-box.active{display:block}.hazard-title{font-size:22px;font-weight:900}.hazard-timer{font-size:34px;font-weight:900;margin:8px 0}.danger{color:#b00020;font-weight:900;font-size:24px}
-
-
-.hub{position:absolute;width:25%;height:25%;border:4px solid #333;border-radius:12px;background:#f7f7f7;display:flex;align-items:center;justify-content:center;font-size:38px;box-shadow:0 3px 9px #0003}
-.hub.a{left:3%;top:3%}.hub.b{right:3%;top:3%}.hub.c{right:3%;bottom:3%}.hub.d{left:3%;bottom:3%}
-.station-label{position:absolute;background:#fff;border:2px solid #333;border-radius:5px;padding:3px 6px;font-size:10px;font-weight:bold;z-index:3}
-.s1{left:43%;top:8%}.s2{right:9%;top:47%}.s3{left:44%;bottom:8%}.s4{left:9%;top:47%}
-.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;font-size:13px}.dot{display:inline-block;width:13px;height:13px;border-radius:50%;vertical-align:-2px;margin-right:4px}
-h2,h3{margin:5px 0 12px}.turn{font-size:18px;font-weight:800}.current-player{margin:10px 0;padding:14px;border-radius:12px;background:#222;color:#fff;font-size:22px;font-weight:900;text-align:center;border:4px solid var(--db-red)}.question{font-size:20px;line-height:1.35;background:#f1f3f4;border-left:6px solid var(--db-red);padding:15px;border-radius:9px;margin:12px 0}
-.answers{display:grid;gap:9px}.answers button,.actions button,.admin button{border:0;border-radius:10px;padding:12px 14px;text-align:left;font-size:16px;cursor:pointer;background:#e8eaed;transition:.15s}.answers button:hover{transform:translateX(2px);background:#d9dde0}.answers button:disabled{cursor:default}.correct{background:#b9e8c7!important}.wrong{background:#f7b7bd!important}
-.status{padding:10px;border-radius:9px;background:#fff6d8;margin:10px 0;font-weight:bold}.actions{display:flex;gap:8px;margin-top:10px}.actions button{background:#222;color:#fff;text-align:center}.actions button.secondary{background:#e4e7e9;color:#222}
-.score{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.score div{padding:9px;border-radius:9px;background:#f0f2f3;border-left:6px solid}.p0{border-color:var(--db-red)!important}.p1{border-color:var(--blue)!important}.p2{border-color:var(--green)!important}.p3{border-color:var(--yellow)!important}
-.admin{margin-top:16px;border-top:1px solid #ddd;padding-top:14px}.player-names{display:grid;gap:8px}.player-names label{display:flex;align-items:center;gap:7px;font-weight:bold}.player-names input{flex:1;padding:10px;border:1px solid #bbb;border-radius:8px;font-size:15px}.admin textarea{width:100%;min-height:150px;font:13px monospace;padding:10px;border:1px solid #bbb;border-radius:8px}.admin button{margin-top:7px;background:var(--db-red);color:#fff}.hint{font-size:12px;color:#666;margin:6px 0}
-footer{max-width:1250px;margin:0 auto 25px;padding:0 14px;font-size:12px;color:#666}
-@media(max-width:900px){main{grid-template-columns:1fr}.board{width:min(680px,94vw)}}
-
-.online-box{margin-top:16px;border-top:1px solid #ddd;padding-top:14px}
-.online-box .row{display:flex;gap:8px;flex-wrap:wrap}
-.online-box input{flex:1;min-width:130px;padding:10px;border:1px solid #bbb;border-radius:8px;font-size:15px}
-.online-box button{border:0;border-radius:10px;padding:11px 14px;background:#1769aa;color:#fff;font-size:15px;cursor:pointer}
-.online-box button.secondary{background:#e4e7e9;color:#222}
-.online-state{margin-top:9px;padding:10px;border-radius:9px;background:#eef6ff;border-left:5px solid #1769aa}
-.online-members{margin-top:8px;font-size:13px}
-.online-badge{display:inline-block;padding:3px 7px;border-radius:10px;background:#16803c;color:#fff;font-size:11px;font-weight:bold}
-
-
-.qr-wrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:12px;padding:12px;background:#f5f7f8;border-radius:12px}
-#qrCanvas{width:180px;height:180px;background:#fff;border-radius:8px;border:1px solid #ccc}
-.qr-info{flex:1;min-width:210px}
-.room-url{font-size:12px;word-break:break-all;background:#fff;padding:8px;border-radius:7px;border:1px solid #ddd}
-
-.lobby-box{margin:10px 0;padding:12px;border-radius:12px;background:#f7f9fa;border:1px solid #d7dde1}
-.lobby-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.lobby-actions button{border:0;border-radius:9px;padding:10px 13px;background:#1769aa;color:#fff;cursor:pointer}.lobby-actions button.secondary{background:#e4e7e9;color:#222}
-.ready-list{font-size:13px;margin-top:8px}.ready{color:#16803c;font-weight:bold}.not-ready{color:#777}
-.feedback{display:none;margin:10px 0;padding:12px;border-radius:10px;background:#eef6ff;border-left:5px solid #1769aa}.feedback.active{display:block}
-.result-box{display:none;margin:12px 0;padding:16px;border-radius:14px;background:#fff;border:2px solid #222;box-shadow:0 4px 14px #0002}.result-box.active{display:block}.result-box h3{margin-top:0}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px}.event-badge{display:inline-block;margin-left:6px;padding:3px 7px;border-radius:9px;background:#f5b800;font-weight:bold}
-@media(max-width:600px){header{padding:12px 14px}.logo{font-size:21px}main{padding:0 8px}.panel{padding:12px}.question{font-size:18px}.answers button{font-size:17px;padding:14px 12px}.actions{flex-wrap:wrap}.actions button{flex:1;min-width:130px}.score{grid-template-columns:1fr}.token{width:26px;height:26px}}
-
-</style>
-<style id="quizbahn-enhancements">
-.player-progress{margin-top:5px;font-size:.9em;line-height:1.35}
-.progress-track{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-top:4px}
-.progress-fill{height:100%;width:0%;background:#2563eb;transition:width .25s}
-.ability-ready{display:inline-block;margin-left:6px;padding:2px 7px;border-radius:999px;background:#fef3c7;color:#92400e;font-weight:700}
-.bottle-progress{font-weight:600}
-.timer-warning{font-size:1.35em;font-weight:800}
-#eventLog .log-entry{padding:3px 0;border-bottom:1px solid #eee}.npc-correct{background:#dcfce7;color:#166534;font-weight:700;padding:5px 7px;border-radius:6px}.npc-wrong{background:#fee2e2;color:#991b1b;font-weight:700;padding:5px 7px;border-radius:6px}.npc-stayed{background:#fef3c7;color:#92400e;font-weight:800;padding:6px 8px;border:2px solid #f59e0b;border-radius:7px}
-</style>
-<style id="scoreboard-styles">
-#scoreboardPanel{display:none!important}
-
-.scoreboard-panel{margin:18px auto;max-width:1000px;padding:14px;border:1px solid #d1d5db;border-radius:14px;background:#fff;text-align:left;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.scoreboard-panel h3{margin:0 0 10px}
-.scoreboard-table{width:100%;border-collapse:collapse;font-size:.95em}
-.scoreboard-table th,.scoreboard-table td{padding:8px 7px;border-bottom:1px solid #e5e7eb;text-align:center}
-.scoreboard-table th:first-child,.scoreboard-table td:first-child{text-align:left}
-.scoreboard-active{font-weight:800}
-.scoreboard-current{background:#eff6ff}
-.scoreboard-negative{font-weight:800}
-.scoreboard-bar{height:7px;background:#e5e7eb;border-radius:99px;overflow:hidden;min-width:80px}
-.scoreboard-fill{height:100%;transition:width .25s}
-</style>
-<style id="karton-responsive-theme">
-/* Karton-/Brettspiel-Optik */
-:root{
-  --kraft:#c99b62;--kraft-light:#ead3ad;--kraft-dark:#80552f;
-  --paper:#f7edda;--ink:#3d2b1d;
-}
-body{
-  background:
-    radial-gradient(ellipse at 15% 10%,#fff8e8 0,transparent 38%),
-    repeating-linear-gradient(8deg,rgba(112,75,35,.035) 0 2px,transparent 2px 7px),
-    #c8a477;
-  color:var(--ink);
-}
-header{
-  background:linear-gradient(135deg,#a96f36,#70451f);
-  border-bottom:6px solid #d9b783;
-  box-shadow:0 5px 0 #70451f,0 9px 18px #4a2d1740;
-}
-.logo span{border-radius:3px}
-.panel,.scoreboard-panel{
-  background:
-    repeating-linear-gradient(0deg,rgba(122,83,42,.025) 0 1px,transparent 1px 5px),
-    linear-gradient(145deg,#fff8e9,#ead5b2);
-  border:3px solid #9b7046;
-  border-radius:9px;
-  box-shadow:5px 6px 0 rgba(91,58,29,.28),0 9px 18px #4a2d1720;
-}
-.board{
-  background:
-    repeating-linear-gradient(12deg,rgba(90,57,25,.07) 0 2px,transparent 2px 8px),
-    linear-gradient(145deg,#e7c99b,#bd8c54);
-  border:12px solid #76502e;
-  border-radius:9px;
-  box-shadow:inset 0 0 0 5px #d6b17b,7px 8px 0 #70451f,0 12px 22px #4a2d1740;
-}
-.track{filter:sepia(.22)}
-.center,.hub,.crossing,.station-label{
-  border-color:#684629;
-  box-shadow:3px 4px 0 rgba(75,47,22,.22);
-}
-.center{background:#f8edda;border-radius:8px}
-.hub{background:#f4e3c4;border-radius:7px}
-.question,.status,.feedback,.lobby-box,.qr-wrap,.online-state,.result-box{
-  background:#fff5df;
-  border:2px solid #b88a58;
-  border-radius:7px;
-  box-shadow:2px 3px 0 rgba(91,58,29,.13);
-}
-.question{border-left:7px solid #b36c32}
-.answers button,.actions button,.admin button,.online-box button,.lobby-actions button{
-  border:2px solid #80552f;
-  border-radius:6px;
-  box-shadow:2px 3px 0 rgba(91,58,29,.25);
-}
-.answers button{background:#ead4ae;color:#3d2b1d}
-.answers button:hover{background:#f5e5c8;transform:translateY(-1px)}
-.actions button,.admin button{background:#80552f;color:#fff}
-.actions button.secondary,.online-box button.secondary,.lobby-actions button.secondary{
-  background:#e5d0ad;color:#3d2b1d
-}
-input,select,textarea{border-radius:5px!important;border-color:#a77b4c!important;background:#fffaf0}
-.current-player{border-radius:7px;box-shadow:3px 4px 0 #70451f}
-.device-switch{
-  display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;
-  padding:12px 14px;background:#e8d1ac;border-bottom:2px solid #a77b4c;
-}
-.device-switch strong{color:#51351e}
-.device-switch button{
-  border:2px solid #80552f;border-radius:6px;padding:8px 13px;
-  background:#fff4df;color:#51351e;font-weight:700;cursor:pointer;
-  box-shadow:2px 3px 0 rgba(91,58,29,.2)
-}
-.device-switch button[aria-pressed="true"]{background:#80552f;color:white}
-body.layout-mobile main{display:flex;flex-direction:column;gap:12px;max-width:560px;padding:0 10px}
-body.layout-mobile .board{width:min(100%,92vw);border-width:8px}
-body.layout-mobile .hub{font-size:clamp(22px,7vw,34px)}
-body.layout-mobile .track{border-width:clamp(18px,5vw,28px)}
-body.layout-mobile .station-label{font-size:8px;padding:2px 4px}
-body.layout-mobile .panel{padding:11px}
-body.layout-mobile .question{font-size:17px}
-body.layout-mobile .answers button{font-size:16px;padding:13px 10px}
-body.layout-mobile .actions{flex-wrap:wrap}
-body.layout-mobile .actions button{flex:1;min-width:120px}
-body.layout-mobile .score{grid-template-columns:1fr 1fr}
-body.layout-tablet main{grid-template-columns:minmax(0,1fr);max-width:900px;gap:14px}
-body.layout-tablet .board{width:min(680px,82vw)}
-body.layout-tablet .panel{padding:14px}
-@media(max-width:900px){
-  body.layout-auto main{grid-template-columns:1fr}
-}
-@media(max-width:600px){
-  body.layout-auto main{display:flex;flex-direction:column;gap:12px;padding:0 8px}
-  body.layout-auto .board{width:min(100%,94vw);border-width:8px}
-  body.layout-auto .panel{padding:11px}
-}
-</style>
-
-<style id="full-cardboard-board">
-/* Das ganze Spielbrett wirkt wie ein ausgeschnittenes Karton-Spiel */
-.board{
-  background:
-    repeating-linear-gradient(7deg,rgba(112,70,34,.055) 0 2px,transparent 2px 10px),
-    radial-gradient(ellipse at 30% 20%,#f6dfb7 0,#dfb982 58%,#c99a61 100%);
-  border:14px solid #80532f!important;
-  border-radius:9px!important;
-  box-shadow:inset 0 0 0 5px #f1d5a8,inset 0 0 0 9px #a87343,0 12px 0 #5f3b22,0 17px 24px #39251666!important;
-}
-.board:before{
-  content:"";position:absolute;inset:7px;border:2px dashed rgba(107,67,35,.35);
-  pointer-events:none;z-index:1;
-}
-.track{
-  border:clamp(20px,4.7vw,34px) solid #a77b4c!important;
-  background:
-    radial-gradient(circle,#ead0a4 0 42%,transparent 43%),
-    repeating-conic-gradient(from 0deg,#d6b17e 0 3deg,#986b40 3deg 6deg)!important;
-  box-shadow:inset 0 0 0 5px #6f482b,0 0 0 8px #e8c99a,0 5px 0 #744a2b!important;
-}
-.track:before,.track:after{border-color:#f7e4c3!important}
-.center{
-  background:
-    repeating-linear-gradient(0deg,rgba(112,70,34,.05) 0 2px,transparent 2px 8px),
-    #f1dcb8!important;
-  border:8px solid #80532f!important;border-radius:8px!important;
-  box-shadow:inset 0 0 0 3px #c59a67,0 6px 0 #5b3922!important;color:#4a2e1c;
-}
-.hub{
-  background:
-    repeating-linear-gradient(0deg,rgba(112,70,34,.055) 0 2px,transparent 2px 8px),
-    linear-gradient(135deg,#f4dfbd,#d7b17e)!important;
-  border:7px solid #80532f!important;border-radius:8px!important;
-  box-shadow:inset 0 0 0 3px #f8e8cf,0 7px 0 #5d3b23,0 10px 13px #39251644!important;
-}
-.station-label{
-  color:#4b301e!important;background:#f7e7cc!important;
-  border:3px solid #80532f!important;border-radius:5px!important;
-  box-shadow:0 4px 0 #654126,0 5px 8px #39251633!important;
-}
-.token{
-  border:3px solid #704727!important;
-  box-shadow:0 3px 0 #4f321d,0 5px 8px #39251655!important;
-}
-.crossing{
-  background:#f3dfbd!important;border:4px solid #80532f!important;
-  box-shadow:0 4px 0 #5b3922!important;
-}
-.board-wrap{background:#f3e2c5!important;border:4px solid #a87949!important}
-.board-wrap h2{color:#4b301e}
-.question,.status,.current-player,.hazard-box,.result-box{
-  background:
-    repeating-linear-gradient(0deg,rgba(112,70,34,.035) 0 2px,transparent 2px 9px),
-    #f6e8d1!important;color:#49301f!important;border-color:#95643b!important;
-}
-.current-player{border:4px solid #80532f!important}
-</style>
-
-
-<style id="cardboard-guide-design">
-.cardboard-guide{--guide-ink:#432d1d;--guide-brown:#80532f;--guide-paper:#fff3df;margin:28px auto 34px!important;max-width:1000px;padding:0!important;overflow:hidden;text-align:left;border:5px solid #80532f!important;border-radius:22px!important;background:repeating-linear-gradient(0deg,rgba(130,87,45,.035) 0 2px,transparent 2px 9px),linear-gradient(135deg,#f8e8c9,#e8c99c)!important;box-shadow:0 9px 0 #684326,0 15px 28px rgba(66,42,22,.22)!important;color:var(--guide-ink)}
-.cardboard-guide .guide-header{padding:24px 26px 20px;background:linear-gradient(125deg,#986333,#754522);color:#fff8eb;border-bottom:7px solid #c99b62}
-.cardboard-guide .guide-kicker{font-size:12px;font-weight:900;letter-spacing:2px;opacity:.88;margin-bottom:7px}
-.cardboard-guide .guide-header h2{margin:0 0 7px;font-size:clamp(23px,4vw,34px);line-height:1.15;color:#fff8eb}
-.cardboard-guide .guide-header p{margin:0;color:#f8e8d1;font-size:15px}
-.cardboard-guide .guide-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:16px 20px 4px}
-.cardboard-guide .guide-fact{display:flex;align-items:center;gap:10px;padding:12px;background:rgba(255,248,235,.72);border:2px solid #b98955;border-radius:13px;box-shadow:0 3px 0 rgba(111,70,35,.2)}
-.cardboard-guide .fact-icon{font-size:25px}.cardboard-guide .guide-fact small,.cardboard-guide .guide-fact strong{display:block}.cardboard-guide .guide-fact small{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:#795333;font-weight:800}.cardboard-guide .guide-fact strong{font-size:14px;line-height:1.25}
-.cardboard-guide .guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;padding:16px 20px 20px}
-.cardboard-guide .guide-card{min-width:0;padding:16px 17px;background:repeating-linear-gradient(0deg,rgba(130,87,45,.035) 0 2px,transparent 2px 8px),#fff4e1;border:2px solid #b88955;border-radius:15px;box-shadow:0 4px 0 rgba(111,70,35,.22)}
-.cardboard-guide .guide-card-wide,.cardboard-guide .guide-finish{grid-column:1/-1}
-.cardboard-guide .guide-card-title{display:flex;align-items:center;gap:9px;margin:0 0 10px;padding-bottom:9px;border-bottom:2px dashed #c8a477}
-.cardboard-guide .guide-card-title>span{display:grid;place-items:center;flex:0 0 34px;height:34px;border-radius:9px;background:#ead2ad;border:1px solid #c59a67;font-size:20px}
-.cardboard-guide .guide-card h3{margin:0;color:#603d22;font-size:18px;line-height:1.2}
-.cardboard-guide .guide-card p{margin:8px 0 0;line-height:1.55;font-size:14px}.cardboard-guide .guide-subtitle{font-weight:900;color:#754b29;margin-bottom:6px!important}
-.cardboard-guide ul{padding:0;margin:8px 0 0;list-style:none}.cardboard-guide li{font-size:14px;line-height:1.4}
-.cardboard-guide .difficulty-list li,.cardboard-guide .points-list li{display:flex;justify-content:space-between;gap:8px;padding:8px 9px;margin-top:6px;background:#f5e4c8;border-radius:8px}.cardboard-guide .difficulty-list li b{font-size:12px;text-align:right;color:#76502f}
-.cardboard-guide .rule-list li{display:flex;gap:9px;align-items:flex-start;padding:8px 0}.cardboard-guide .rule-mark{flex:0 0 23px;height:23px;display:grid;place-items:center;border-radius:50%;font-weight:900}.cardboard-guide .rule-mark.good{background:#d8ead5;color:#246c35}.cardboard-guide .rule-mark.bad{background:#f4d8d3;color:#a32620}
-.cardboard-guide .points-plus{color:#26713b}.cardboard-guide .points-minus{color:#a62b22}.cardboard-guide .guide-note{padding:9px 10px;background:#f2dfbd;border-radius:8px;font-size:13px!important}
-.cardboard-guide .guide-finish{background:linear-gradient(135deg,#f8e7c5,#edcf9f);border-color:#98683c}.cardboard-guide .guide-footer{text-align:center;padding:14px;background:#80532f;color:#fff3df;font-size:17px;font-weight:900;letter-spacing:.3px}
-@media(max-width:650px){.cardboard-guide{margin:20px 8px 28px!important;border-width:4px!important;border-radius:16px!important}.cardboard-guide .guide-header{padding:19px 16px 16px}.cardboard-guide .guide-facts{grid-template-columns:1fr;padding:12px 12px 2px}.cardboard-guide .guide-fact{padding:9px 11px}.cardboard-guide .guide-grid{grid-template-columns:1fr;padding:12px;gap:10px}.cardboard-guide .guide-card-wide,.cardboard-guide .guide-finish{grid-column:auto}.cardboard-guide .guide-card{padding:13px}.cardboard-guide .guide-card h3{font-size:16px}.cardboard-guide .guide-card p,.cardboard-guide li{font-size:13px}}
-</style>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quiz-Bahn – 408 Fahrdienstvorschrift</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="layout-auto">
 <header>
-  <div class="logo"><span>DB</span>Quiz-Bahn</div>
-  <small>80 Originalfragen aus den bereitgestellten Prüfungsunterlagen – nur Ankreuzaufgaben</small>
+  <div class="logo"><span>408</span>Quiz-Bahn</div>
+  <small>408 Fahrdienstvorschrift · 100 Fragen · Klassenmodus für bis zu 10 Handys</small>
 </header>
 <nav class="device-switch" aria-label="Anzeigeformat">
   <strong>Ansicht:</strong>
-  <button type="button" data-layout="auto" aria-pressed="true" onclick="setLayoutMode('auto')">Automatisch</button>
-  <button type="button" data-layout="tablet" aria-pressed="false" onclick="setLayoutMode('tablet')">Tablet</button>
-  <button type="button" data-layout="mobile" aria-pressed="false" onclick="setLayoutMode('mobile')">Handy</button>
+  <button class="btn" data-layout="auto" onclick="setLayout('auto')">Automatisch</button>
+  <button class="btn" data-layout="tablet" onclick="setLayout('tablet')">Tablet</button>
+  <button class="btn" data-layout="mobile" onclick="setLayout('mobile')">Handy</button>
 </nav>
 
-
 <main>
-<section class="panel board-wrap">
-  <h2>Das Spielbrett – jeder Spieler fährt mit einem eigenen Zug</h2>
+<section class="panel" id="boardPanel">
+  <h2 id="boardTitle">🗺️ Spielbrett</h2>
   <div class="board" id="board">
     <div class="track"></div>
     <div class="hub a">🚉</div><div class="hub b">🚆</div><div class="hub c">🚉</div><div class="hub d">🚆</div>
-    <div class="station-label s1">BERLIN HBF</div>
-    <div class="station-label s2">KÖLN HBF</div>
-    <div class="station-label s3">MÜNCHEN HBF</div>
-    <div class="station-label s4">HAMBURG HBF</div>
-    <div class="center"><div><span class="train">🚄</span>QUIZ<br>BAHN</div></div>
-    <div class="crossing" id="crossing0" title="Bahnübergang 1"></div>
-    <div class="crossing" id="crossing1" title="Bahnübergang 2"></div>
-    <div class="crossing" id="crossing2" title="Bahnübergang 3"></div>
-    <div class="crossing" id="crossing3" title="Bahnübergang 4"></div>
+    <div class="slabel" style="left:2.5%;top:24.5%">BERLIN HBF</div>
+    <div class="slabel" style="right:2.5%;top:24.5%">KÖLN HBF</div>
+    <div class="slabel" style="right:2.5%;bottom:24.5%">MÜNCHEN HBF</div>
+    <div class="slabel" style="left:2.5%;bottom:24.5%">HAMBURG HBF</div>
+    <div class="center"><span class="train">🚄</span>QUIZ<br>BAHN<small>Ril 408</small></div>
   </div>
-  <div class="legend">
-    <span><i class="dot t0"></i>Rot</span><span><i class="dot t1"></i>Blau</span>
-    <span><i class="dot t2"></i>Grün</span><span><i class="dot t3"></i>Gelb</span><span>🚧 Bahnübergang</span><span>⭐ Ereignisfeld</span>
-  </div>
+  <div class="legend" id="legend"></div>
 </section>
 
-<section class="panel">
-  <div class="local-player-count" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:10px 12px;background:#f7f7f7;border:1px solid #ddd;border-radius:10px">
-    <b>🎮 Spieleranzahl:</b>
-    <select id="localPlayerCount" onchange="setLocalPlayerCount(this.value)" style="padding:8px 12px;border:1px solid #bbb;border-radius:8px;font-size:15px">
-      <option value="1">1 Spieler</option>
-      <option value="2">2 Spieler</option>
-      <option value="3">3 Spieler</option>
-      <option value="4" selected>4 Spieler</option>
-    </select><label id="npcDifficultyWrap" style="display:none;margin-left:8px;">NPC-Schwierigkeit:
-<select id="npcDifficulty">
-<option value="leicht">Leicht</option>
-<option value="mittel" selected>Mittel</option>
-<option value="schwer">Schwer</option>
-</select></label>
-    <span id="localModeHint" style="font-size:13px;color:#666">Einzelspieler mit 3 NPCs oder 2–4 Spieler am selben Gerät.</span>
-  </div>
-  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
-    <b>🎚️ Schwierigkeit:</b>
-    <select id="difficultySelect" onchange="setDifficulty(this.value)" style="padding:8px 12px;border:1px solid #bbb;border-radius:8px;font-size:15px">
-      <option value="all">Alle</option><option value="easy">Leicht</option><option value="medium">Mittel</option><option value="hard">Schwer</option>
-    </select>
-    <span id="difficultyLabel" style="font-size:13px;color:#666"></span>
-  </div>
-  <div class="turn" id="turnText"></div>
-  <div class="current-player" id="currentPlayer"></div>
-  <div class="status" id="status">Beantworte die Frage richtig, um deinen Zug zu bewegen. Ziel: 7 vollständige Runden.</div>
-  <div class="question" id="question"></div>
-  <div class="answers" id="answers"></div>
-  <div class="feedback" id="feedback"></div>
-  <div class="result-box" id="resultBox">
-    <h3>🏆 Ergebnis</h3>
-    <div id="resultContent"></div>
-    <div class="lobby-actions" style="margin-top:12px">
-      <button onclick="playAgain()">🔄 Nochmal spielen</button>
+<section class="panel" id="gamePanel">
+  <!-- ===== Einstellungen ===== -->
+  <div id="setup">
+    <h2>🎮 Neues Spiel</h2>
+    <div class="modecards">
+      <label><input type="radio" name="mode" value="class" checked onchange="updateSetup()"><span><b>📱 Klassenmodus – alle antworten gleichzeitig am Handy</b><br><span class="hint">1–10 Spieler treten per QR-Code bei. Brett und Frage am Beamer, Antworten am eigenen Handy. Je schneller richtig, desto weiter.</span></span></label>
+      <label><input type="radio" name="mode" value="local" onchange="updateSetup()"><span><b>🖥️ Ein Gerät – reihum</b><br><span class="hint">1–4 Spieler am Beamer oder Tablet, abwechselnd; allein gegen 3 NPCs.</span></span></label>
     </div>
-  </div>
-  <div class="hazard-box" id="hazardBox">
-    <div class="hazard-title">🚧 BAHNÜBERGANG – STÖRUNG!</div>
-    <div>Du bist an einem gestörten Bahnübergang. Beantworte die Zusatzfrage innerhalb von <b>1 Minute</b>.</div>
-    <div class="hazard-timer" id="hazardTimer">60</div>
-    <div class="question" id="hazardQuestion"></div>
-    <div class="answers" id="hazardAnswers"></div>
-    <div class="danger" id="hazardStatus"></div>
-  </div>
-  <div class="actions">
-    <button onclick="newQuestion()">Neue Frage</button>
-    <button class="secondary" onclick="resetGame()">Spiel neu starten</button>
-  </div>
-
-  <div class="score" id="score"></div>
-
-  <div class="admin">
-    <h3>Spieler-Namen</h3>
-    <div class="player-names">
-      <label>🔴 <input id="name0" maxlength="20" placeholder="Spieler Rot"></label>
-      <label>🔵 <input id="name1" maxlength="20" placeholder="Spieler Blau"></label>
-      <label>🟢 <input id="name2" maxlength="20" placeholder="Spieler Grün"></label>
-      <label>🟡 <input id="name3" maxlength="20" placeholder="Spieler Gelb"></label>
-      <button onclick="saveNames()">Spieler-Namen speichern</button>
+    <div class="grid2">
+      <label class="f">Fragen-Schwierigkeit
+        <select id="cfgDiff"><option value="all">Alle</option><option value="easy">Leicht</option><option value="medium">Mittel</option><option value="hard">Schwer</option></select></label>
+      <label class="f">Themenbereich
+        <select id="cfgThema"><option value="all">Alle Themen (100)</option></select></label>
+      <label class="f">Runden bis zum Sieg
+        <select id="cfgLaps"><option selected>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></label>
+      <label class="f classOnly">Antwortzeit je Frage
+        <select id="cfgSecs"><option value="20">20 Sekunden</option><option value="30" selected>30 Sekunden</option><option value="45">45 Sekunden</option><option value="60">60 Sekunden</option></select></label>
+      <label class="f localOnly">Spieler
+        <select id="cfgPlayers" onchange="updateSetup()">
+          <option value="1">1 Spieler (gegen 3 NPCs)</option><option value="2">2 Spieler</option><option value="3">3 Spieler</option><option value="4" selected>4 Spieler</option>
+        </select></label>
+      <label class="f localOnly" id="npcWrap">NPC-Stärke
+        <select id="cfgNpc"><option value="leicht">Leicht (~55 %)</option><option value="mittel" selected>Mittel (~72 %)</option><option value="schwer">Schwer (~88 %)</option></select></label>
+      <label class="f localOnly">Antwortzeit-Bonus
+        <select id="cfgBonus"><option value="10" selected>+1 Punkt unter 10 s</option><option value="15">+1 Punkt unter 15 s</option><option value="0">aus</option></select></label>
     </div>
+    <div class="localOnly">
+      <h3 style="margin-top:14px">Spieler-Namen</h3>
+      <div class="names" id="nameInputs"></div>
+    </div>
+    <details class="box classOnly" id="netBox">
+      <summary><b>🌐 PieSocket-Zugang eingeben</b></summary>
+      <p class="hint">Nur nötig, wenn weder ein eigener Server läuft noch in <code>js/config.js</code> ein PieSocket-Zugang steht. Tragen Sie Cluster-ID und <b>API-Key</b> ein – niemals das API-Secret. Die Werte werden in diesem Browser gespeichert und über den QR-Code an die Handys weitergegeben.</p>
+      <div class="grid2">
+        <label class="f">Cluster-ID<input id="pieCluster" placeholder="z. B. free.blr2"></label>
+        <label class="f">API-Key<input id="pieKey" placeholder="API-Key"></label>
+      </div>
+      <p class="hint">Ohne API-Key läuft der <b>Testmodus</b>: Er verbindet nur Browser-Tabs auf diesem einen Gerät – gut zum Ausprobieren, nicht für die Klasse.</p>
+    </details>
+    <p class="hint classOnly" id="netStatus" style="font-weight:700"></p>
+    <div class="row" style="margin-top:14px">
+      <button class="btn big" id="startBtn" onclick="setupStart()">🚦 Spiel starten</button>
+      <button class="btn sec hidden" id="resumeBtn" onclick="resumeGame()">↩︎ Gespeichertes Spiel fortsetzen</button>
+    </div>
+    <p class="hint" id="setupHint"></p>
   </div>
 
-
-  <div class="online-box">
-    <h3>🌐 Online-Modus</h3>
-    <div class="hint">Mit einem Raumcode können mehrere Browser im selben lokalen Netzwerk bzw. Browser-Kontext synchronisiert werden. Für Spieler über das Internet ist zusätzlich ein WebSocket-/Firebase-Server erforderlich.</div>
-    <div class="row">
-      <input id="roomCode" maxlength="8" placeholder="Raumcode z. B. A7K4P">
-      <label style="display:flex;align-items:center;gap:6px;font-weight:bold;white-space:nowrap">Spieler: <select id="playerCount" style="padding:10px;border:1px solid #bbb;border-radius:8px;font-size:15px"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option></select></label>
-      <button onclick="createOnlineRoom()">Raum erstellen</button>
-      <button class="secondary" onclick="joinOnlineRoom()">Beitreten</button>
-      <button class="secondary" onclick="reconnectOnlineRoom()">Erneut beitreten</button><button class="secondary" onclick="leaveOnlineRoom()">Raum verlassen</button>
-    </div>
-    <div class="online-state" id="onlineState">Nicht verbunden.</div>
-    <div class="lobby-box" id="lobbyBox" style="display:none">
-      <b>👥 Lobby</b>
-      <div id="readyList" class="ready-list"></div>
-      <div class="lobby-actions">
-        <button id="readyBtn" onclick="toggleReady()">Bereit</button>
-        <button id="startBtn" class="secondary" onclick="startOnlineGame()">Spiel starten</button>
+  <!-- ===== Lobby (Beamer) ===== -->
+  <div id="lobby" class="hidden">
+    <h2>📱 Mitspielen per QR-Code</h2>
+    <div class="qrwrap">
+      <div id="qrBox"></div>
+      <div style="flex:1;min-width:200px">
+        <div class="hint">Raumcode</div>
+        <div class="roomcode" id="roomCode"></div>
+        <div class="hint" style="margin-top:6px">Link zum Beitreten:</div>
+        <div class="url" id="joinUrl"></div>
+        <div class="hint" id="netInfo" style="margin-top:6px"></div>
       </div>
     </div>
-    <div class="online-members" id="onlineMembers"></div>
-    <div class="qr-wrap">
-      <canvas id="qrCanvas" width="180" height="180"></canvas>
-      <div class="qr-info">
-        <b>📱 Direkt beitreten</b>
-        <p>Scanne den QR-Code mit dem Handy. Der Raumcode wird automatisch übernommen.</p>
-        <div class="room-url" id="roomJoinUrl">Noch kein Raum erstellt.</div>
+    <h3 style="margin-top:14px">Beigetreten: <span id="lobbyCount">0</span> / <span id="lobbyMax">10</span></h3>
+    <div class="chips" id="lobbyList"></div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn big" id="lobbyStart" onclick="clStartGame()" disabled>🚦 Spiel starten</button>
+      <button class="btn sec" onclick="clCancel()">Abbrechen</button>
+    </div>
+    <p class="hint">Spieler können auch noch während des Spiels beitreten (Start auf Feld 0).</p>
+  </div>
+
+  <!-- ===== Klassenmodus: Beamer ===== -->
+  <div id="hostPlay" class="hidden">
+    <div class="current" id="hHead"></div>
+    <div class="box status" id="hStatus"></div>
+    <div class="box question" id="hQ">
+      <div class="meta" id="hMeta"></div>
+      <div id="hText"></div>
+      <div class="tbar" id="hBar"><i></i></div>
+    </div>
+    <div class="answers" id="hAnswers"></div>
+    <div class="box feedback hidden" id="hFb"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn big hidden" id="hEnd" onclick="clEndEarly()">⏹ Antwortzeit beenden</button>
+      <button class="btn big hidden" id="hNext" onclick="clContinue()">Nächste Frage ➜</button>
+      <label class="hint" style="font-weight:700"><input type="checkbox" id="hAuto" onchange="clToggleAuto()"> automatisch weiter nach 15 s</label>
+    </div>
+    <div class="box">
+      <h3>🏆 Rangliste</h3>
+      <div id="hRank"></div>
+    </div>
+    <div class="box">
+      <div class="qrwrap"><div id="qrSmall"></div><div><b>Nachzügler oder Verbindung verloren?</b><div class="hint">QR-Code scannen – Spieler mit demselben Handy werden wieder ihrer Figur zugeordnet.</div><div class="roomcode" style="font-size:24px" id="roomCode2"></div></div></div>
+    </div>
+    <div class="box"><h3>📜 Fahrtenbuch</h3><div class="log" id="hLog"></div></div>
+    <div class="row"><button class="btn sec" onclick="askNewGame()">⟲ Spiel beenden / Einstellungen</button></div>
+  </div>
+
+  <!-- ===== Klassenmodus: Handy ===== -->
+  <div id="client" class="hidden">
+    <div id="cJoin">
+      <h2>📱 Quiz-Bahn – Mitspielen</h2>
+      <p>Raum <b id="cRoom"></b></p>
+      <label class="f">Ihr Name<input id="cName" maxlength="16" placeholder="Vorname" autocomplete="off"></label>
+      <div class="row" style="margin-top:10px"><button class="btn big" id="cJoinBtn" onclick="cJoin()">Beitreten</button></div>
+      <p class="hint" id="cJoinMsg"></p>
+    </div>
+    <div id="cGame" class="hidden">
+      <div class="me" id="cMe"></div>
+      <div class="box status" id="cStatus"></div>
+      <div id="cQWrap">
+        <div class="box question">
+          <div class="meta" id="cMeta"></div>
+          <div id="cText"></div>
+          <div class="tbar" id="cBar"><i></i></div>
+        </div>
+        <div class="answers" id="cAnswers"></div>
       </div>
+      <div class="box feedback hidden" id="cFb"></div>
+      <div class="row"><button class="btn sec hidden" id="cBottle" onclick="cOpenBottle()">🍾 Rückschick-Fähigkeit einsetzen</button></div>
+      <div class="box"><h3>🏆 Rangliste</h3><div id="cRank"></div></div>
     </div>
   </div>
 
-
-  <div class="admin">
-    <h3>Fragen verwalten</h3>
-    <div class="hint">Format: Frage + 4 oder 5 Antwortmöglichkeiten + richtige Antwort + Fahrstrecke</div>
-    <textarea id="questionEditor"></textarea>
-    <button onclick="saveQuestions()">Fragen speichern</button>
-    <button onclick="resetQuestions()">Standardfragen wiederherstellen</button>
+  <!-- ===== Ein Gerät (reihum) ===== -->
+  <div id="play" class="hidden">
+    <div class="current" id="current"></div>
+    <div class="box status" id="status"></div>
+    <div id="qWrap">
+      <div class="box question">
+        <div class="meta" id="qMeta"></div>
+        <div id="qText"></div>
+      </div>
+      <div class="answers" id="answers"></div>
+    </div>
+    <div class="box hazard hidden" id="hazard">
+      <div class="hazard-title">🚧 BAHNÜBERGANG – STÖRUNG!</div>
+      <div>Der Zug hat einen gestörten Bahnübergang erreicht. Beantworten Sie die Störfallfrage innerhalb von <b>60 Sekunden</b>.</div>
+      <div class="timer" id="hzTimer">60</div>
+      <div class="box question" id="hzText" style="margin:6px 0"></div>
+      <div class="answers" id="hzAnswers"></div>
+    </div>
+    <div class="box feedback hidden" id="feedback"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn big hidden" id="nextBtn" onclick="nextStep()">Weiter ➜</button>
+      <button class="btn sec hidden" id="bottleBtn" onclick="openBottle()">🍾 Rückschick-Fähigkeit einsetzen</button>
+    </div>
+    <div class="box"><h3>🏆 Scoreboard</h3><div id="scoreboard"></div></div>
+    <div class="box"><h3>📜 Fahrtenbuch</h3><div class="log" id="log"></div></div>
+    <div class="row"><button class="btn sec" onclick="askNewGame()">⟲ Neues Spiel / Einstellungen</button></div>
   </div>
 </section>
 </main>
-<footer>Eigenständige Spielvorlage. Der Online-Raummodus nutzt PieSocket-WebSockets für echtes Internet-Multiplayer über verschiedene Geräte und Netzwerke. Für eine echte DB-Optik können lizenzierte DB-Logos, Zugbilder und Strecken-Grafiken im CSS/HTML durch deine bereitgestellten Assets ersetzt werden.</footer>
 
-<script>
-const defaultQuestions=[
-  {
-    "q": "1. Welche Stelle bzw. Zentrale ist nachfolgend beschrieben? „Hier wird der gesamte Zugverkehr auf dem Schienennetz der Deutschen Bahn koordiniert. Darauf aufbauend koordiniert sie bei Ereignissen mit überregionalen und bahngrenzüberschreitenden Auswirkungen die erforderlichen Maßnahmen.“",
-    "a": [
-      "Infoleitstelle",
-      "Notfallleitstelle",
-      "Betriebszentrale",
-      "Netzleitzentrale",
-      "Steuerzentrale"
-    ],
-    "correct": 3,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "2. Wie lautet der Wortlaut der Zugmeldung, wenn ein bereits abgemeldeter Zug zunächst nicht abfährt und deshalb die Zugmeldung zurückgenommen werden muss?",
-    "a": [
-      "„Berichtigte Zugmeldung, Zug 60300 kommt nicht.“",
-      "„Zugmeldung, Abmeldung für Zug 60300 wird zurückgenommen.“",
-      "„Zugmeldung, Zug 60300 kommt nicht.“",
-      "„Berichtigte Zugmeldung, Zugmeldung für Zug 60300 wird zurückgenommen.“",
-      "„Berichtigte Zugmeldung, Abmeldung für Zug 60300 wird zurückgenommen.“"
-    ],
-    "correct": 4,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "5. Zur Fahrwegprüfung gehört auch das Feststellen, ob die zu befahrenden Weichen richtig gestellt sind. Bei welchen Weichen muss an der Außenanlage die richtige Stellung überprüft werden?",
-    "a": [
-      "Bei geriegelten Weichen",
-      "Bei elektrisch gestellten Weichen",
-      "Bei ortsgestellten Weichen, die weder geriegelt noch durch Handverschluss gesichert sind",
-      "Bei ortsgestellten Weichen, die geriegelt sind",
-      "Bei Rückfallweichen"
-    ],
-    "correct": 2,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "7. Die Zustimmung zu einer Zugfahrt soll zurückgenommen werden. Wann darf ein Hauptsignal auf Halt gestellt und die Fahrstraße aufgelöst werden?",
-    "a": [
-      "Eine durch Hauptsignal erteilte Zustimmung darf immer zurückgenommen werden, wenn es der Fahrdienstleiter für erforderlich hält",
-      "Bei fahrenden Zügen, wenn die Zugspitze noch nicht am zurückzunehmenden Signal vorbeigefahren ist",
-      "Bei fahrenden Zügen, wenn die Zugspitze sich noch im ausreichenden Abstand zum zurückzunehmenden Signal befindet",
-      "Bei haltenden Zügen, wenn anzunehmen ist, dass der Zug halten bleibt",
-      "Bei haltenden Zügen, wenn der Triebfahrzeugführer bestätigt hat, dass der Zug halten bleibt"
-    ],
-    "correct": 4,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "8. Es soll ein Zug in einen Bahnhof einfahren. Dazu muss unter anderem geprüft werden, dass der Fahrweg frei von Fahrzeugen ist. Wie erfolgt die Prüfung auf Freisein, wenn keine Gleisfreimeldeanlage vorhanden ist?",
-    "a": [
-      "Durch eine Abschnittsprüfung",
-      "Durch Hinsehen",
-      "Durch eine Räumungsprüfung",
-      "Durch die Feststellung, dass der zuletzt ausgefahrene Zug den Bahnhof mit Zg 2 verlassen hat",
-      "Durch eine Zugvollständigkeitsmeldung des Tf"
-    ],
-    "correct": 1,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "9. Welcher Fdl ist für das Einführen des Fahrens auf dem Gegengleis zuständig, wenn kein Gleiswechselbetrieb eingerichtet ist?",
-    "a": [
-      "Der Fdl, der planmäßig Zugfahrten in dieses Gleis zulässt",
-      "Der Fdl, der die Züge auf das Gegengleis ablassen will",
-      "Der für das Sperren von Gleisen zuständige Fdl",
-      "Der von der Betriebszentrale bestimmte Fdl",
-      "Der Fdl, dem ein Zug auf dem Gegengleis abgemeldet wird"
-    ],
-    "correct": 1,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "14. Welche Aussage zu Sperrfahrten ist richtig?",
-    "a": [
-      "Sperrfahrten erhalten für Hin- und Rückfahrt je eine Zugnummer.",
-      "Unvorhergesehene Sperrfahrten fahren nach dem Sonderfahrplan.",
-      "Bei geplanten Sperrfahrten dürfen die Angaben der Fahrplan-Mitteilung durch Eintrag im Befehl 14 bekannt gegeben werden.",
-      "Sperrfahrten müssen von Zugmeldestelle zu Zugmeldestelle verkehren.",
-      "In ein gesperrtes Streckengleis dürfen mehrere Sperrfahrten eingelassen werden."
-    ],
-    "correct": 4,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "18. Welches der aufgeführten Signale darf als Zielsignal für einfahrende Züge verwendet werden?",
-    "a": [
-      "Haltetafel",
-      "Hochstehendes Lichtsperrsignal",
-      "Wartezeichen",
-      "Haltepunktetafel",
-      "Vorsignal"
-    ],
-    "correct": 1,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "26. Auf der orangefarbenen Tafel eines Kesselwagens ist der Nummer zur Kennzeichnung der Gefahr ein „X“ vorangestellt. Welche Bedeutung hat dieses Zeichen?",
-    "a": [
-      "Es handelt sich um ein stark giftiges Gut.",
-      "Es handelt sich um ein Gut, das mit Luft heftig reagiert.",
-      "Es handelt sich um ein Gut, das mit Wasser gefährlich reagiert.",
-      "Es handelt sich um ein schwach radioaktives Gut.",
-      "Es handelt sich um ein Gut, von dem nur eine sehr geringe Gefahr ausgeht."
-    ],
-    "correct": 2,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "27. Wegen drohender Gefahr wurden Züge angehalten. Wann dürfen diese ihre Fahrt fortsetzen?",
-    "a": [
-      "Wenn der Triebfahrzeugführer festgestellt hat, dass die drohende Gefahr beseitigt ist",
-      "Wenn der Notfallmanager die Zustimmung zur Weiterfahrt gegeben hat",
-      "Wenn die Betriebszentrale die Zustimmung zur Weiterfahrt gegeben hat",
-      "Wenn der Fahrdienstleiter die Zustimmung zur Weiterfahrt gegeben hat",
-      "Wenn ein sonstiger Mitarbeiter mit betrieblichen Aufgaben die Zustimmung zur Weiterfahrt gegeben hat"
-    ],
-    "correct": 3,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "6. Wie wird eine Räumungsprüfung bestätigt?",
-    "a": [
-      "Mit der Abmeldung eines Zuges",
-      "Mit der Ankunftsmeldung aller Fahrzeuge eines Zuges",
-      "Mit der Rückmeldung eines Zuges",
-      "Mit einer Zugschlussmeldung eines Zuges"
-    ],
-    "correct": 2,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "25. Welche Bedeutung hat die untere Nummer (UN-Nummer) auf einer orangefarbenen Tafel?",
-    "a": [
-      "Hinweis auf die schriftlichen Weisungen gemäß RID",
-      "Kennzeichnung des Gefahrguts",
-      "Kennzeichnung des Wageneinstellers",
-      "Kennzeichnung der Gefahr",
-      "Klasse und Ziffer nach RID"
-    ],
-    "correct": 1,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "23. Mit welcher Geschwindigkeit darf der Zug zurücksetzen, wenn sich der Tf nicht an der Spitze des Zuges befindet?",
-    "a": [
-      "Schrittgeschwindigkeit",
-      "10 km/h",
-      "20 km/h",
-      "30 km/h",
-      "40 km/h"
-    ],
-    "correct": 2,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "24. Was muss Ihnen der Tf zusätzlich zur Meldung, dass das Zurücksetzen beendet ist, noch melden?",
-    "a": [
-      "Das Freisein des vorliegenden Gleisabschnitts",
-      "Die Vollständigkeit des Zuges",
-      "Das Räumen der Zugschlussstelle",
-      "Die Rückkehr aller Fahrzeuge",
-      "Die Stellung des Hauptsignals"
-    ],
-    "correct": 1,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "17. Welche Maßnahmen muss der Fdl treffen, wenn an einem Hauptsignal gearbeitet werden soll?",
-    "a": [
-      "Zugangsweichen in abweisender Stellung sperren",
-      "Merkhinweis „!“ neben der Signaltaste",
-      "Hilfssperre beim Fahrdienstleiter an der Einrichtung für die Fahrstraßenprüfung",
-      "Einzelsperrung des Signals",
-      "Bedienungsausschaltung der Signalwahlgruppen"
-    ],
-    "correct": 3,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "28. Wer legt die Qualitätspolitik und die Qualitätsziele für das QM-System im Unternehmen fest?",
-    "a": [
-      "Der QM-Auditor",
-      "Der QM-Manager",
-      "Die Kunden",
-      "Die Unternehmensleitung",
-      "Die jeweilige DIN-Norm"
-    ],
-    "correct": 3,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "22. Es wird entschieden, dass der Zug zurückgesetzt werden soll. Welche Aussage ist richtig?",
-    "a": [
-      "Das Zurücksetzen des Zugs im Bahnhof ist nur zulässig, wenn es im Streckenbuch erlaubt ist",
-      "Das Zurücksetzen des Zuges erfolgt im Bahnhof als Rangierfahrt",
-      "Ein Zurücksetzen des Zugs ist nur bei sichtigem Wetter erlaubt",
-      "Die Zustimmung zum Zurücksetzen des Zugs erfolgt mündlich",
-      "Die Zustimmung zum Zurücksetzen des Zugs erfolgt mit Befehl"
-    ],
-    "correct": 4,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "11. Welche Zugmeldungen müssen für eine Zugfahrt auf Gegengleis gegeben werden, wenn auf der Strecke Gleiswechselbetrieb ständig eingerichtet ist?",
-    "a": [
-      "Anbieten, Annehmen, Abmelden mit dem Zusatz „auf dem Gegengleis“ und Rückmelden",
-      "Anbieten, Annehmen, Abmelden mit dem Zusatz „auf dem Gegengleis“",
-      "Abmelden mit dem Zusatz „auf dem Gegengleis“ und Rückmelden",
-      "Nur Abmelden mit dem Zusatz „auf dem Gegengleis“",
-      "Nur Rückmelden"
-    ],
-    "correct": 1,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "1. Sie wollen auf einer eingleisigen Strecke von der planmäßigen Reihenfolge der Züge abweichen. Unter welchen Voraussetzungen ist dies zugelassen?",
-    "a": [
-      "Wenn die Zustimmung durch den Netzkoordinator erteilt wurde",
-      "Wenn die BZ von der geänderten Reihenfolge unterrichtet wurde",
-      "Wenn dies mit den beteiligten Zugmeldestellen vereinbart und die beteiligten Mitarbeiter auf den Betriebsstellen unterrichtet wurden",
-      "Wenn mit der Zugmeldung die geänderte Reihenfolge der Züge bekannt gegeben wurde",
-      "Wenn der Tf der betroffenen Zugfahrt von der geänderten Reihenfolge unterrichtet wurde"
-    ],
-    "correct": 2,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "30. Wie nennt man ein auf das QM-System ausgerichtetes Audit, bei dem die Wirksamkeit der QM-Maßnahmen im Ablauf der Gesamtabwicklung des QM-Systems überprüft wird?",
-    "a": [
-      "System-Audit",
-      "Prozess-Audit",
-      "QM-Audit",
-      "Personal-Audit",
-      "Produkt-Audit"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Vom Nutzer bereitgestellte Fragen"
-  },
-  {
-    "q": "Grundlagen 408 – 1. Wofür gilt die Fahrdienstvorschrift (Ril 408) im Wesentlichen?",
-    "a": [
-      "Für die Durchführung des Bahnbetriebs und Zugfahrten sowie Rangierfahrten",
-      "Ausschließlich für die Instandhaltung von Fahrzeugen",
-      "Nur für die Fahrkartenkontrolle",
-      "Nur für den Güterverkehr"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 2. Welche Regelwerksfamilie enthält die Fahrdienstvorschrift?",
-    "a": [
-      "Ril 100",
-      "Ril 408",
-      "Ril 400",
-      "Ril 915"
-    ],
-    "correct": 1,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 3. Was bedeutet die Abkürzung Fdl?",
-    "a": [
-      "Fahrdienstleiter",
-      "Fahrzeugdienstleitung",
-      "Fahrplanlotse",
-      "Fernverkehrsdisponent"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 4. Was bedeutet die Abkürzung Tf?",
-    "a": [
-      "Technischer Fahrplan",
-      "Triebfahrzeugführer",
-      "Transportführer",
-      "Teilfahrdienstleiter"
-    ],
-    "correct": 1,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 5. Wofür steht EIU?",
-    "a": [
-      "Eisenbahn-Infrastrukturunternehmen",
-      "Einsatz- und Informationsunterlage",
-      "Europäische Intercity-Union",
-      "Eisenbahninterne Untersuchung"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 6. Wofür steht EVU?",
-    "a": [
-      "Eisenbahn-Verkehrsunternehmen",
-      "Einsatzverkehrsunterstützung",
-      "Elektronische Verkehrsüberwachung",
-      "Europäische Verkehrsunion"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 7. Was bedeutet PZB?",
-    "a": [
-      "Punktförmige Zugbeeinflussung",
-      "Permanente Zugbegleitüberwachung",
-      "Personenzug-Betriebszentrale",
-      "Prüfung Zugbremsen"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 8. Was bedeutet LZB?",
-    "a": [
-      "Linienförmige Zugbeeinflussung",
-      "Lokale Zugbetriebssteuerung",
-      "Leitstellen-Zug-Betrieb",
-      "Langsamfahr-Zugbeeinflussung"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 9. Wofür steht BÜ?",
-    "a": [
-      "Bahnübergang",
-      "Betriebsüberwachung",
-      "Bahnüberleitung",
-      "Befehlsübermittlung"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 10. Was bedeutet Asig?",
-    "a": [
-      "Ausfahrsignal",
-      "Anschlussgleis",
-      "Außensignal",
-      "Ankunftssignal"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 11. Was bedeutet Zmb?",
-    "a": [
-      "Zugmeldebuch",
-      "Zugnummernmelder",
-      "Zugbewegungsbefehl",
-      "Zugmeldemeldung"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 12. Wofür steht Ggl?",
-    "a": [
-      "Gegengleis",
-      "Gleisgruppe",
-      "Gütergleis",
-      "Grenzgleis"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 13. Was bedeutet Rp im betrieblichen Zusammenhang?",
-    "a": [
-      "Rangierpersonal",
-      "Rangierplan",
-      "Rückmeldepunkt",
-      "Regelpersonenzug"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 14. Was bedeutet Ww?",
-    "a": [
-      "Weichenwärter",
-      "Wagenwärter",
-      "Wagenwerkstatt",
-      "Weichenwärterwagen"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 15. Was umfasst der Begriff Bahnbetrieb?",
-    "a": [
-      "Zugfahrten und Rangierfahrten",
-      "Nur Zugfahrten",
-      "Nur Rangierfahrten",
-      "Ausschließlich die Fahrzeuginstandhaltung"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 16. Was bedeutet Abstellen im Bahnbetrieb?",
-    "a": [
-      "Fahrzeuge so sichern, dass sie nicht unbeabsichtigt wegrollen",
-      "Fahrzeuge für eine Zugfahrt bereitstellen",
-      "Fahrzeuge während der Fahrt bremsen",
-      "Fahrzeuge an einen anderen Zug kuppeln"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 17. Was ist Abstoßen?",
-    "a": [
-      "Fahrzeuge werden durch eine Rangierlokomotive in Bewegung gebracht und dann abgekuppelt",
-      "Fahrzeuge rollen aus eigener Kraft in ein Gleis",
-      "Ein Zug fährt rückwärts in einen Bahnhof",
-      "Ein Fahrzeug wird mit einem Kran angehoben"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 18. Was versteht man unter Ablaufen?",
-    "a": [
-      "Fahrzeuge rollen vom Ablaufberg oder aus einem Gefälle in Richtung Zielgleis",
-      "Ein Zug fährt mit verminderter Geschwindigkeit",
-      "Ein Zug hält vor einem Hauptsignal",
-      "Ein Fahrzeug wird auf eine andere Strecke überführt"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 19. Was ist eine Abzweigstelle?",
-    "a": [
-      "Eine Stelle der freien Strecke, an der Züge von einer Strecke auf eine andere übergehen können",
-      "Ein Bahnhofsteil ohne Weichen",
-      "Ein Haltepunkt mit mehreren Bahnsteigen",
-      "Eine ausschließlich dem Rangieren dienende Anlage"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 20. Was ist ein Bahnhof im Sinne der Fahrdienstvorschrift?",
-    "a": [
-      "Bahnanlagen mit mindestens einer Weiche, wo Züge beginnen, enden, halten, kreuzen oder wenden dürfen",
-      "Jede Stelle mit einem Bahnsteig",
-      "Jede Betriebsstelle ohne Weichen",
-      "Nur eine große Personenverkehrsanlage"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 21. Was kennzeichnet einen Haltepunkt?",
-    "a": [
-      "Eine Bahnanlage ohne Weichen, an der Züge halten, beginnen oder enden dürfen",
-      "Eine Bahnanlage mit mindestens zwei Weichen",
-      "Eine Stelle zum Kreuzen von Zügen",
-      "Eine ausschließlich für Güterzüge vorgesehene Anlage"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 22. Was sind Hauptgleise?",
-    "a": [
-      "Gleise, die im durchgehenden Zugbetrieb befahren werden können",
-      "Ausschließlich Gleise zum Abstellen",
-      "Nur Gleise für Rangierfahrten",
-      "Gleise ohne Signalabhängigkeit"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 23. Was sind Nebengleise?",
-    "a": [
-      "Gleise, die nicht zu den Hauptgleisen gehören",
-      "Alle durchgehenden Hauptgleise",
-      "Ausschließlich Streckengleise",
-      "Gleise, die nur von Reisezügen befahren werden"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 24. Was ist eine Blockstrecke?",
-    "a": [
-      "Ein Streckenabschnitt, in den ein Zug nur unter festgelegten Bedingungen einfahren darf",
-      "Ein Gleisabschnitt innerhalb eines Bahnsteigs",
-      "Ein Gleis zum Abstellen von Fahrzeugen",
-      "Ein Abschnitt, der nur von Rangierfahrten befahren wird"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 25. Was ist eine Blockstelle?",
-    "a": [
-      "Eine Stelle, die eine Blockstrecke begrenzt oder in Blockabschnitte unterteilt",
-      "Ein Aufenthaltsraum für Fahrdienstleiter",
-      "Eine Weiche zwischen zwei Bahnhöfen",
-      "Ein Bahnübergang mit Schranken"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 26. Was ist eine Deckungsstelle?",
-    "a": [
-      "Eine Stelle der freien Strecke, die den Verkehr insbesondere an Gefahrstellen sichert",
-      "Ein Bahnhof ohne Zugverkehr",
-      "Ein Gleis zum Abstellen von Zügen",
-      "Eine Stelle zum Wechseln des Triebfahrzeugs"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 27. Was ist eine Einfahrweiche?",
-    "a": [
-      "Eine Weiche, über die ein Zug in einen Bahnhof einfährt",
-      "Die letzte Weiche vor einem Bahnübergang",
-      "Eine Weiche ausschließlich im Rangierbezirk",
-      "Eine Weiche, die nur bei Ausfahrten benutzt wird"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 28. Was ist ein Bedarfshalt?",
-    "a": [
-      "Ein Halt, der nur bei Bedarf bzw. nach entsprechendem Haltewunsch erfolgt",
-      "Ein Halt, der bei jeder Zugfahrt vorgeschrieben ist",
-      "Ein Halt ausschließlich für Güterzüge",
-      "Ein Halt bei jeder Signalstörung"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 29. Was ist ein Betriebshalt?",
-    "a": [
-      "Ein Halt aus betrieblichen Gründen, zum Beispiel zum Kreuzen oder Überholen",
-      "Ein Halt ausschließlich zum Ein- und Aussteigen",
-      "Ein Halt nur an einem Haltepunkt",
-      "Ein Halt aufgrund eines Fahrgastwunsches"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 30. Was kennzeichnet einen geschobenen Zug?",
-    "a": [
-      "Das Triebfahrzeug befindet sich nicht an der Spitze des Zuges",
-      "Das Triebfahrzeug befindet sich immer an der Zugspitze",
-      "Der Zug wird ohne Triebfahrzeug bewegt",
-      "Der Zug besteht ausschließlich aus Triebwagen"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 31. Was ist das Gegengleis?",
-    "a": [
-      "Das Streckengleis der Gegenrichtung auf einer zweigleisigen Strecke",
-      "Ein Nebengleis im Bahnhof",
-      "Ein Gleis für Rangierfahrten",
-      "Ein ausschließlich gesperrtes Gleis"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 32. Wofür steht EOA bei der LZB?",
-    "a": [
-      "Ende der LZB-Führung",
-      "Einfahrtsorientierungsanzeige",
-      "Elektronische Ortsaufsicht",
-      "Erlaubnis zur Ortsbedienung"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 33. Welche Aufgabe hat die Fahrdienstvorschrift grundsätzlich?",
-    "a": [
-      "Sie regelt die sichere und geordnete Durchführung des Bahnbetriebs",
-      "Sie regelt ausschließlich die Arbeitszeiten",
-      "Sie legt Fahrpreise fest",
-      "Sie beschreibt nur die Fahrzeugtechnik"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 34. Welche Aussage beschreibt eine Zugfahrt?",
-    "a": [
-      "Eine Fahrt eines Zuges auf der freien Strecke oder in Bahnhöfen nach den dafür geltenden Regeln",
-      "Jede Bewegung eines einzelnen Wagens beim Rangieren",
-      "Das Abstellen eines Triebfahrzeugs",
-      "Eine Fahrt ausschließlich innerhalb einer Werkstatt"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 35. Welche Aussage zum Rangieren trifft zu?",
-    "a": [
-      "Rangieren sind Fahrzeugbewegungen, die nicht zu Zugfahrten gehören",
-      "Rangieren ist jede Fahrt auf der freien Strecke",
-      "Rangieren ist nur das Abstellen von Wagen",
-      "Rangieren findet ausschließlich auf Hauptgleisen statt"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 36. Welche Betriebsstelle kann Züge beginnen und enden lassen sowie Zugkreuzungen ermöglichen?",
-    "a": [
-      "Bahnhof",
-      "Haltepunkt",
-      "Bahnübergang",
-      "Blockstelle ohne weitere Bahnhofsanlagen"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 37. Welche Anlage besitzt definitionsgemäß keine Weichen?",
-    "a": [
-      "Haltepunkt",
-      "Bahnhof",
-      "Abzweigstelle",
-      "Überleitstelle"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 38. Was ist der wesentliche Zweck einer Blockstelle?",
-    "a": [
-      "Die Zugfolge auf der Strecke zu sichern und zu regeln",
-      "Das Ein- und Aussteigen von Reisenden zu ermöglichen",
-      "Wagen für den Güterverkehr zu wiegen",
-      "Rangierpersonal unterzubringen"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 39. Welche Aussage zu Haupt- und Nebengleisen ist richtig?",
-    "a": [
-      "Hauptgleise dienen dem Zugverkehr; Nebengleise sind nicht als Hauptgleise eingestuft",
-      "Nebengleise sind stets für höhere Geschwindigkeiten zugelassen",
-      "Hauptgleise dürfen nur zum Abstellen genutzt werden",
-      "Die Begriffe bezeichnen ausschließlich die Gleislänge"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  },
-  {
-    "q": "Grundlagen 408 – 40. Was beschreibt eine Abzweigstelle am treffendsten?",
-    "a": [
-      "Eine Betriebsstelle der freien Strecke, an der Züge auf eine andere Strecke übergehen können",
-      "Eine Stelle innerhalb eines Bahnsteigs",
-      "Eine Anlage ausschließlich zum Abstellen",
-      "Eine Betriebsstelle ohne Verbindung zu anderen Gleisen"
-    ],
-    "correct": 0,
-    "steps": 2,
-    "source": "Ergänzte Fragen aus dem 40800-Grundlagenfragenblock"
-  }
-];
+<div class="lower">
+  <details class="panel" open>
+    <summary>📖 So funktioniert die Quiz-Bahn</summary>
+    <h3 style="margin-top:12px">📱 Klassenmodus (alle gleichzeitig)</h3>
+    <div class="rules">
+      <article><h3>🚦 1. Ablauf</h3><p>Die Lehrkraft öffnet am Beamer einen Raum, alle scannen den QR-Code und geben ihren Namen ein (bis 10 Spieler). Die Frage erscheint am Beamer und auf allen Handys – alle antworten gleichzeitig am eigenen Handy.</p></article>
+      <article><h3>⚡ 2. Tempo zählt</h3><p>Richtig im ersten Drittel der Antwortzeit: <b>3 Felder</b>, im zweiten Drittel: <b>2 Felder</b>, im letzten Drittel: <b>1 Feld</b>. Falsch oder keine Antwort: Der Zug bleibt stehen.</p></article>
+      <article><h3>🏅 3. Punkte</h3><p>✅ Richtig <b>+2</b> · ❌ Falsch <b>−1</b> · keine Antwort 0 · schnellste richtige Antwort der Frage <b>+1 Bonus</b>. Bei Gleichstand im Ziel entscheiden die Punkte.</p></article>
+      <article><h3>🚧 4. Bahnübergänge</h3><p>Wer über einen 🚧 fährt, gerät mit 1/3 Wahrscheinlichkeit an einen gestörten BÜ. Alle Betroffenen bekommen dieselbe Störfallfrage aufs Handy (25 s). Richtig: +1 Punkt. Falsch oder zu spät: <b>2 Felder zurück</b>.</p></article>
+      <article><h3>⭐ 5. Ereignisfelder</h3><p>Wer auf einem ⭐ landet, löst mit 50 % ein Ereignis aus: Freie Fahrt, Langsamfahrstelle, Signal zeigt Halt, Bonus- oder Abzugspunkte.</p></article>
+      <article><h3>🍾 6. Flaschen-Regel</h3><p>Nach <b>4 richtigen Antworten in Folge</b> kann man einmalig einen Mitspieler <b>5 Felder zurückschicken</b> (höchstens bis zum START-Feld seiner Runde) – einsetzbar am Handy, solange die Auflösung angezeigt wird.</p></article>
+      <article><h3>🏆 7. Spielende</h3><p>Sobald nach einer Frage jemand die eingestellte Rundenzahl geschafft hat, endet das Spiel. Platzierung nach Strecke, dann Punkten.</p></article>
+    </div>
+    <h3 style="margin-top:16px">🖥️ Ein Gerät (reihum)</h3>
+    <p>Wie das Original-Quiz: Reihum beantwortet der Spieler am Zug die Frage (1–3 Felder je nach Schwierigkeit), +2/−1 Punkte, +1 Punkt für schnelle Antworten, BÜ-Störfallfrage mit 60 s, Ereignisfelder, Flaschen-Regel, allein gegen 3 NPCs.</p>
+  </details>
 
-let questions=loadQuestions(), playerNames=loadNames(), current=0, turn=0, positions=[0,0,0,0], winner=false;
-const crossingPositions=[4,9,14,19];
-const eventPositions=[3,7,11,15,18];
-let hazardActive=false, hazardPlayer=-1, hazardQuestionIndex=-1, hazardDeadline=0, hazardTimerHandle=null, hazardMessage="";
-let questionsWithoutBottle=[0,0,0,0], bottlePower=[false,false,false,false];
-const WIN_LAPS=7, TRACK_LENGTH=20;
-const colors=["Rot","Blau","Grün","Gelb"], starts=[0,25,50,75];
+  <details class="panel">
+    <summary>🧑‍🏫 Für die Lehrkraft: Lösungsübersicht mit Fundstellen</summary>
+    <p class="hint">Alle 100 Fragen mit richtiger Antwort – geeignet als Erwartungshorizont oder zur Ergebnissicherung. Fragen mit Fundstelle sind geprüft nach Handbuch 40800 (Ril 408), Version 9.0, gültig ab 14.12.2025; ⚠ markiert korrigierte Schülerfragen. Bitte vor dem Einsatz die aktuelle Fassung prüfen.</p>
+    <div class="row" style="margin:8px 0"><label>Filter: <select id="catFilter" onchange="renderCatalog()"><option value="all">alle</option><option value="Prüfungsfragen der Klasse">Prüfungsfragen der Klasse</option><option value="Abweichungen vom Regelbetrieb (LF 8)">Abweichungen vom Regelbetrieb (LF 8)</option><option value="Störungen (LF 9)">Störungen (LF 9)</option><option value="hz">nur Störfallfragen (BÜ-Pool)</option><option value="korr">nur korrigierte Schülerfragen</option></select></label></div>
+    <div style="overflow:auto"><table class="cat" id="catalog"></table></div>
+  </details>
 
-// Online-/Raummodus über PieSocket (echtes Internet-Multiplayer):
-// WICHTIG: Hier nur den API KEY eintragen, niemals das API SECRET.
-// Cluster-ID deines PieSocket-Clusters: free.blr2
-const PIESOCKET_CLUSTER_ID="free.blr2";
-const PIESOCKET_API_KEY="Fg0ZT3jFOIBEGbDgIPvrztwvCAaeQuli2cUHfSRA";
-let onlineChannel=null, onlineRoom="", onlineId=(sessionStorage.getItem("quizbahn_online_id")||Math.random().toString(36).slice(2,9)), onlineHost=false;
-sessionStorage.setItem("quizbahn_online_id",onlineId);
-let hostId="";
-let onlinePlayers={};
-let activePlayers=4;
-let npcMode=false;
-let npcDifficulty='mittel';
-let playerScores=[0,0,0,0];
-let npcPlayers=[false,false,false,false];
-let localPlayerIndex=-1;
-let playerOwners={};
-let lobbyReady=false, gameStarted=false, readyPlayers={}, difficulty="all", eventMessage="", reconnectTimer=null, reconnectAttempts=0;
-let stats=[0,1,2,3].map(()=>({correct:0,wrong:0,time:0,answers:0}));
-let usedQuestions=[];
-let questionStartedAt=Date.now();
+  <details class="panel">
+    <summary>🛠️ Fragen verwalten</summary>
+    <p class="hint">Format je Frage: <code>q</code> (Frage), <code>a</code> (4–5 Antworten), <code>correct</code> (Index der richtigen Antwort, ab 0), <code>d</code> (easy/medium/hard), <code>thema</code> (Themenbereich), <code>src</code> (Fundstelle), <code>ex</code> (Erklärung), optional <code>hz:true</code> (Störfallfrage am BÜ). Die Antworten werden im Spiel gemischt. Im Klassenmodus schickt der Beamer die Fragen an die Handys – bearbeitete Fragen gelten also für alle. Dauerhaft ändern Sie den Fragenkatalog in der Datei <code>data/fragen.js</code>.</p>
+    <textarea id="editor" spellcheck="false"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button class="btn" onclick="saveEditor()">Fragen speichern</button>
+      <button class="btn sec" onclick="copyEditor()">JSON kopieren</button>
+      <button class="btn sec" onclick="resetQuestions()">Standardfragen wiederherstellen</button>
+      <span class="hint" id="editorMsg"></span>
+    </div>
+  </details>
+</div>
+<footer>„Quiz-Bahn 408“ der Klasse, erweitert um den Klassenmodus. Ergänzte Fragen nach Ril 408 (Handbuch 40800, V9.0). Keine offizielle Veröffentlichung der DB InfraGO AG.</footer>
 
-// Dauerhafte lokale Sicherung des Spielstands und des Scoreboards.
-const QUIZBAHN_SAVE_KEY="quizbahn_scoreboard_save_v1";
-let restoredSavedGame=false;
-function saveQuizbahnState(){
-  try{
-    const payload={version:1,savedAt:Date.now(),playerNames,activePlayers,npcMode,npcDifficulty,npcPlayers,localPlayerIndex,
-      playerScores,positions,turn,winner,gameStarted,current,usedQuestions,stats,questionsWithoutBottle,bottlePower,
-      difficulty,eventMessage,hazardActive,hazardPlayer,hazardQuestionIndex,hazardDeadline,hazardMessage};
-    localStorage.setItem(QUIZBAHN_SAVE_KEY,JSON.stringify(payload));
-    const status=document.getElementById("scoreboardSaveStatus");
-    if(status) status.textContent="✓ Automatisch gespeichert · "+new Date(payload.savedAt).toLocaleString("de-DE");
-  }catch(e){
-    const status=document.getElementById("scoreboardSaveStatus");
-    if(status) status.textContent="Speichern nicht möglich – bitte Browser-Speicher prüfen.";
-  }
-}
-function restoreQuizbahnState(){
-  try{
-    const raw=localStorage.getItem(QUIZBAHN_SAVE_KEY);
-    if(!raw)return false;
-    const d=JSON.parse(raw);
-    if(!d || d.version!==1 || !Array.isArray(d.positions) || !Array.isArray(d.playerScores))return false;
-    if(Array.isArray(d.playerNames))playerNames=d.playerNames;
-    if(Number.isInteger(d.activePlayers))activePlayers=Math.max(1,Math.min(4,d.activePlayers));
-    if(typeof d.npcMode==="boolean")npcMode=d.npcMode;
-    if(typeof d.npcDifficulty==="string")npcDifficulty=d.npcDifficulty;
-    if(Array.isArray(d.npcPlayers))npcPlayers=d.npcPlayers;
-    if(Number.isInteger(d.localPlayerIndex))localPlayerIndex=d.localPlayerIndex;
-    playerScores=[0,1,2,3].map(i=>Number(d.playerScores[i])||0);
-    positions=[0,1,2,3].map(i=>Number(d.positions[i])||0);
-    if(Number.isInteger(d.turn))turn=((d.turn%activePlayers)+activePlayers)%activePlayers;
-    if(typeof d.winner==="boolean")winner=d.winner;
-    if(typeof d.gameStarted==="boolean")gameStarted=d.gameStarted;
-    if(Number.isInteger(d.current))current=d.current;
-    if(Array.isArray(d.usedQuestions))usedQuestions=d.usedQuestions;
-    if(Array.isArray(d.stats))stats=[0,1,2,3].map(i=>d.stats[i]||({correct:0,wrong:0,time:0,answers:0}));
-    if(Array.isArray(d.questionsWithoutBottle))questionsWithoutBottle=[0,1,2,3].map(i=>Number(d.questionsWithoutBottle[i])||0);
-    if(Array.isArray(d.bottlePower))bottlePower=[0,1,2,3].map(i=>!!d.bottlePower[i]);
-    if(typeof d.difficulty==="string")difficulty=d.difficulty;
-    if(typeof d.eventMessage==="string")eventMessage=d.eventMessage;
-    if(typeof d.hazardActive==="boolean")hazardActive=d.hazardActive;
-    if(Number.isInteger(d.hazardPlayer))hazardPlayer=d.hazardPlayer;
-    if(Number.isInteger(d.hazardQuestionIndex))hazardQuestionIndex=d.hazardQuestionIndex;
-    if(Number.isFinite(d.hazardDeadline))hazardDeadline=d.hazardDeadline;
-    if(typeof d.hazardMessage==="string")hazardMessage=d.hazardMessage;
-    restoredSavedGame=true;
-    return true;
-  }catch(e){return false;}
-}
-restoreQuizbahnState();
+<div class="overlay hidden" id="overlay"><div class="dialog" id="dialog"></div></div>
 
-function onlineSnapshot(){
-  return {
-    room:onlineRoom,
-    host:onlineHost,
-    sender:onlineId,
-    playerNames:[...playerNames],
-    activePlayers,
-    localPlayerIndex,
-    playerOwners:{...playerOwners},
-    readyPlayers:{...readyPlayers}, gameStarted, difficulty, stats, usedQuestions:[...usedQuestions],
-    current, turn, positions:[...positions], winner, hazardActive, hazardPlayer, hazardQuestionIndex, hazardDeadline, hazardMessage
-  };
-}
-function sendOnlineMessage(event,data){
-  if(onlineChannel && onlineChannel.readyState===WebSocket.OPEN){
-    onlineChannel.send(JSON.stringify({event,data}));
-  }
-}
-function updateQRCode(){
-  const canvas=document.getElementById("qrCanvas");
-  const label=document.getElementById("roomJoinUrl");
-  if(!canvas||!label)return;
-  const ctx=canvas.getContext("2d");
-  ctx.clearRect(0,0,180,180);
-  ctx.fillStyle="#fff";ctx.fillRect(0,0,180,180);
-  if(!onlineRoom){
-    ctx.fillStyle="#777";ctx.font="14px Arial";ctx.textAlign="center";
-    ctx.fillText("Raum erstellen",90,92);
-    label.textContent="Noch kein Raum erstellt.";
-    return;
-  }
-  const joinUrl=new URL(window.location.href);
-  joinUrl.searchParams.set("room",onlineRoom);
-  const text=joinUrl.toString();
-  label.textContent=text;
-  const img=new Image();
-  img.crossOrigin="anonymous";
-  img.onload=()=>{ ctx.drawImage(img,0,0,180,180); };
-  img.onerror=()=>{
-    ctx.fillStyle="#222";ctx.font="bold 13px Arial";ctx.textAlign="center";
-    ctx.fillText("QR nicht verfügbar",90,82);
-    ctx.font="12px Arial";ctx.fillText("Raumcode: "+onlineRoom,90,105);
-  };
-  img.src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data="+encodeURIComponent(text);
-}
-function playerLabel(i){
-  return (playerNames[i]||colors[i])+" ("+colors[i]+")";
-}
-function updateOnlineUI(){
-  const state=document.getElementById("onlineState"), members=document.getElementById("onlineMembers");
-  const lobby=document.getElementById("lobbyBox"), readyList=document.getElementById("readyList");
-  if(!onlineRoom){state.textContent="Nicht verbunden.";members.textContent="";if(lobby)lobby.style.display="none";updateQRCode();return;}
-  const connected=onlineChannel&&onlineChannel.readyState===WebSocket.OPEN;
-  let mine=localPlayerIndex>=0?" · Du bist "+playerLabel(localPlayerIndex):" · Spieler wird zugewiesen…";
-  state.innerHTML='<span class="online-badge">'+(connected?"ONLINE":"OFFLINE")+'</span> Raum '+onlineRoom+(onlineHost?' · Host':'')+mine;
-  const list=[]; for(let i=0;i<activePlayers;i++){const owner=Object.keys(playerOwners).find(id=>Number(playerOwners[id])===i);list.push((owner?"🟢":"⚪")+" "+playerLabel(i)+(owner===onlineId?" ← DU":""));}
-  members.textContent="Spieler ("+activePlayers+"): "+list.join(" · ");
-  if(lobby){lobby.style.display=connected?"block":"none";}
-  if(readyList){readyList.innerHTML=Array.from({length:activePlayers},(_,i)=>{const owner=Object.keys(playerOwners).find(id=>Number(playerOwners[id])===i);const r=owner&&readyPlayers[owner];return `<span class="${r?'ready':'not-ready'}">${r?'✅':'⬜'} ${playerLabel(i)}</span>`;}).join(" &nbsp; ");}
-  const rb=document.getElementById("readyBtn"), sb=document.getElementById("startBtn");
-  if(rb){rb.disabled=localPlayerIndex<0||gameStarted;rb.textContent=localPlayerIndex>=0&&readyPlayers[onlineId]?"Bereit ✓":"Bereit";}
-  if(sb){sb.style.display=onlineHost?"inline-block":"none";sb.disabled=!onlineHost||gameStarted;}
-  updateQRCode();
-}
-function hostAssignPlayer(sender,name){
-  if(!onlineHost)return -1;
-  if(playerOwners[sender]!==undefined)return Number(playerOwners[sender]);
-  const used=Object.values(playerOwners).map(Number);
-  let slot=-1;
-  for(let i=0;i<activePlayers;i++){if(!used.includes(i)){slot=i;break;}}
-  if(slot<0)return -1;
-  playerOwners[sender]=slot;
-  if(name && name!=="Spieler" && (!playerNames[slot] || playerNames[slot].startsWith("Spieler "))){
-    playerNames[slot]=name;
-  }
-  return slot;
-}
-function setupOnlineChannel(){
-  if(!window.WebSocket){
-    document.getElementById("onlineState").textContent="Dieser Browser unterstützt WebSocket nicht.";
-    return false;
-  }
-  if(onlineChannel){try{onlineChannel.close();}catch(e){} onlineChannel=null;}
-  const room=encodeURIComponent(onlineRoom);
-  const url="wss://"+PIESOCKET_CLUSTER_ID+".piesocket.com/v4/"+room+
-            "?api_key="+encodeURIComponent(PIESOCKET_API_KEY)+
-            "&notify_self=1&presence=1&user="+encodeURIComponent(onlineId)+"&be=1";
-  onlineChannel=new WebSocket(url);
-  onlineChannel.onopen=()=>{
-    reconnectAttempts=0; if(reconnectTimer){clearTimeout(reconnectTimer);reconnectTimer=null;}
-    onlinePlayers[onlineId]=playerLabel(localPlayerIndex>=0?localPlayerIndex:0);
-    lobbyReady=true;
-    readyPlayers[onlineId]=!!onlineHost;
-    updateOnlineUI();
-    sendOnlineMessage("quiz_join",{sender:onlineId,name:playerNames[localPlayerIndex>=0?localPlayerIndex:0]||"Spieler"});
-    sendOnlineMessage("system::get_members",{channel:onlineRoom});
-    if(onlineHost){
-      hostId=onlineId;
-      sendOnlineMessage("quiz_state",onlineSnapshot());
-    }else{
-      sendOnlineMessage("request_state",{sender:onlineId,name:playerNames[0]||"Spieler"});
-    }
-  };
-  onlineChannel.onmessage=e=>{
-    let m; try{m=JSON.parse(e.data);}catch(err){return;}
-    const event=m.event||"", data=m.data||{};
-    if(event==="system::error"){
-      document.getElementById("onlineState").textContent="PieSocket-Fehler: "+(typeof data==="string"?data:"Verbindung fehlgeschlagen"); return;
-    }
-    if(event==="system::member_list"){
-      const members=Array.isArray(data.members)?data.members.map(String):[];
-      if(onlineHost){
-        const allowed=new Set(members);
-        allowed.add(onlineId);
-        for(const id of Object.keys(playerOwners)){
-          if(!allowed.has(id)) delete playerOwners[id];
-        }
-        syncOnline();
-      }
-      updateOnlineUI(); return;
-    }
-    if(event==="system::member_left"){
-      const left=String(data.member||"");
-      if(onlineHost){
-        const leftSlot=playerOwners[left];
-        if(leftSlot!==undefined){
-          const wasTurn=Number(leftSlot)===turn;
-          delete playerOwners[left];
-          delete readyPlayers[left];
-          delete onlinePlayers[left];
-          if(wasTurn && !hazardActive && !winner) turn=(turn+1)%activePlayers;
-          syncOnline();
-        }
-      } else {
-        delete onlinePlayers[left];
-        // Falls der Host verschwunden ist, übernimmt der Spieler mit dem kleinsten Slot.
-        if(left===hostId){
-          const candidates=Object.entries(playerOwners).filter(([id,slot])=>id!==left && Number(slot)<activePlayers);
-          candidates.sort((a,b)=>Number(a[1])-Number(b[1]));
-          if(candidates.length && candidates[0][0]===onlineId){
-            onlineHost=true; hostId=onlineId;
-            sendOnlineMessage("quiz_state",onlineSnapshot());
-          }
-        }
-      }
-      updateOnlineUI(); return;
-    }
-    if(event==="system::member_joined"){ updateOnlineUI(); return; }
-    if(event==="ready_change"){ if(playerOwners[data.sender]!==undefined){readyPlayers[data.sender]=!!data.ready; if(onlineHost)syncOnline(); updateOnlineUI();} return; }
-    if(event==="quiz_join"){
-      if(data.sender===onlineId)return;
-      if(onlineHost){
-        const slot=hostAssignPlayer(data.sender,data.name||"Spieler");
-        readyPlayers[data.sender]=false;
-        if(slot<0){sendOnlineMessage("room_full",{to:data.sender,activePlayers});}
-        else sendOnlineMessage("quiz_state",onlineSnapshot());
-      }
-      updateOnlineUI(); return;
-    }
-    if(event==="request_state"){
-      if(onlineHost && data.sender!==onlineId){
-        const slot=hostAssignPlayer(data.sender,data.name||"Spieler");
-        if(slot>=0) sendOnlineMessage("quiz_state",onlineSnapshot());
-        else sendOnlineMessage("room_full",{to:data.sender,activePlayers});
-      }
-      return;
-    }
-    if(event==="room_full"){
-      if(data.to===onlineId){alert("Der Raum ist bereits voll ("+activePlayers+" Spieler).");}
-      return;
-    }
-    if(event==="quiz_state"){
-      const state=data;
-      if(state.room!==onlineRoom)return;
-      if(Array.isArray(state.playerNames))playerNames=state.playerNames;
-      activePlayers=Math.max(1,Math.min(4,Number(state.activePlayers)||4));
-      playerOwners=state.playerOwners||{};
-      readyPlayers=state.readyPlayers||{};
-      gameStarted=!!state.gameStarted;
-      difficulty=state.difficulty||"all";
-      if(Array.isArray(state.stats))stats=state.stats;
-      if(Array.isArray(state.usedQuestions))usedQuestions=state.usedQuestions;
-      localPlayerIndex=playerOwners[onlineId]!==undefined?Number(playerOwners[onlineId]):-1;
-      current=state.current??current;
-      turn=state.turn??turn;
-      positions=Array.isArray(state.positions)?state.positions:positions;
-      winner=!!state.winner;
-      hazardActive=!!state.hazardActive;
-      hazardPlayer=Number.isFinite(Number(state.hazardPlayer))?Number(state.hazardPlayer):-1;
-      hazardQuestionIndex=Number.isFinite(Number(state.hazardQuestionIndex))?Number(state.hazardQuestionIndex):-1;
-      hazardDeadline=Number(state.hazardDeadline)||0;
-      hazardMessage=typeof state.hazardMessage==="string"?state.hazardMessage:"";
-      onlinePlayers={};
-      for(const [id,slot] of Object.entries(playerOwners)){onlinePlayers[id]=playerLabel(Number(slot));}
-      render(); renderPlayerProgressPanel(); updatePlayerProgress(); renderScoreboard(); renderScoreboard(); renderQuestion(); updateOnlineUI();
-    }
-  };
-  onlineChannel.onerror=()=>{document.getElementById("onlineState").textContent="WebSocket-Verbindung fehlgeschlagen. Bitte API-Key und PieSocket prüfen.";};
-  onlineChannel.onclose=()=>{
-    if(onlineRoom){
-      lobbyReady=false;
-      document.getElementById("onlineState").innerHTML='<span class="online-badge">OFFLINE</span> Verbindung getrennt – automatischer Wiederverbindungsversuch…';
-      if(reconnectAttempts<5){
-        const delay=Math.min(15000,1500*Math.pow(2,reconnectAttempts++));
-        clearTimeout(reconnectTimer);
-        reconnectTimer=setTimeout(()=>{ if(onlineRoom && (!onlineChannel || onlineChannel.readyState!==WebSocket.OPEN)) setupOnlineChannel(); },delay);
-      }else{
-        document.getElementById("onlineState").innerHTML='<span class="online-badge">OFFLINE</span> Verbindung getrennt – bitte „Erneut beitreten“ drücken.';
-      }
-      updateOnlineUI();
-    }
-  };
-  return true;
-}
-function autoJoinRoomFromUrl(){
-  const code=new URLSearchParams(window.location.search).get("room");
-  if(code){document.getElementById("roomCode").value=code.toUpperCase().slice(0,8);setTimeout(joinOnlineRoom,100);}
-  else updateQRCode();
-}
-function createOnlineRoom(){
-  const code=(document.getElementById("roomCode").value.trim().toUpperCase()||Math.random().toString(36).slice(2,7).toUpperCase()).slice(0,8);
-  activePlayers=Math.max(1,Math.min(4,Number(document.getElementById("playerCount").value)||4));
-  document.getElementById("roomCode").value=code;
-  onlineRoom=code; onlineHost=true; hostId=onlineId; onlinePlayers={}; playerOwners={}; localPlayerIndex=0; readyPlayers={}; gameStarted=false; usedQuestions=[]; stats=[0,1,2,3].map(()=>({correct:0,wrong:0,time:0,answers:0}));
-  playerOwners[onlineId]=0; readyPlayers[onlineId]=true;
-  if(!setupOnlineChannel())return;
-  updateOnlineUI();
-  alert("Raum "+onlineRoom+" erstellt. Spieleranzahl: "+activePlayers+". Teile jetzt den QR-Code.");
-  syncOnline();
-}
-function joinOnlineRoom(){
-  const code=document.getElementById("roomCode").value.trim().toUpperCase();
-  if(!code){alert("Bitte zuerst einen Raumcode eingeben.");return;}
-  onlineRoom=code; onlineHost=false; onlinePlayers={}; playerOwners={}; localPlayerIndex=-1; readyPlayers={}; gameStarted=false; usedQuestions=[];
-  if(!setupOnlineChannel())return;
-  updateOnlineUI();
-}
-function leaveOnlineRoom(){
- clearTimeout(reconnectTimer); reconnectTimer=null; reconnectAttempts=0;
- if(onlineChannel){try{onlineChannel.close();}catch(e){}}
- onlineChannel=null; onlineRoom=""; onlineHost=false; hostId=""; localPlayerIndex=-1; playerOwners={}; readyPlayers={}; lobbyReady=false; gameStarted=true;
- updateOnlineUI(); render(); renderPlayerProgressPanel(); updatePlayerProgress(); renderScoreboard(); renderScoreboard(); renderQuestion();
- history.replaceState({},document.title,window.location.pathname);
-}
-function reconnectOnlineRoom(){
-  if(!onlineRoom){alert("Kein Raum gespeichert.");return;}
-  if(onlineChannel && onlineChannel.readyState===WebSocket.OPEN){updateOnlineUI();return;}
-  onlineHost=(hostId===onlineId); localPlayerIndex=playerOwners[onlineId]!==undefined?Number(playerOwners[onlineId]):-1;
-  setupOnlineChannel();
-}
-function toggleReady(){
- if(!onlineRoom||localPlayerIndex<0||gameStarted)return;
- readyPlayers[onlineId]=!readyPlayers[onlineId];
- sendOnlineMessage("ready_change",{sender:onlineId,ready:!!readyPlayers[onlineId]});
- updateOnlineUI(); syncOnline();
-}
-function startOnlineGame(){
- if(!onlineHost)return;
- const connected=Object.keys(playerOwners).filter(id=>readyPlayers[id]).length;
- if(connected<activePlayers){alert("Noch nicht alle Spieler sind bereit.");return;}
- gameStarted=true; usedQuestions=[]; current=pickQuestion(); turn=0; positions=[0,0,0,0]; playerScores=[0,0,0,0]; winner=false; questionsWithoutBottle=[0,0,0,0]; bottlePower=[false,false,false,false]; hazardActive=false; hazardPlayer=-1; hazardQuestionIndex=-1; hazardDeadline=0; hazardMessage=""; eventMessage=""; stats=[0,1,2,3].map(()=>({correct:0,wrong:0,time:0,answers:0}));
- syncOnline(); render(); renderPlayerProgressPanel(); updatePlayerProgress(); renderScoreboard(); renderScoreboard(); renderQuestion();
-}
-function setDifficulty(v){difficulty=v||"all"; document.getElementById("difficultySelect").value=difficulty; syncOnline(); renderQuestion();}
-function getDifficulty(q){ if(q&&q.difficulty) return q.difficulty; const s=Number(q&&q.steps)||1; return s<=1?"easy":s===2?"medium":"hard"; }
-function pickQuestion(){
- const pool=difficulty==="all"?questions:questions.filter(q=>getDifficulty(q)===difficulty);
- const source=pool.length?pool:questions;
- let available=source.filter((q)=>!usedQuestions.includes(questions.indexOf(q)));
- if(!available.length){usedQuestions=[];available=source;}
- const q=available[Math.floor(Math.random()*available.length)];
- const idx=questions.indexOf(q); if(idx>=0)usedQuestions.push(idx);
- return idx>=0?idx:0;
-}
-function showFeedback(text,kind=""){const el=document.getElementById("feedback");if(!el)return;el.className="feedback active";el.innerHTML=text;}
-function hideFeedback(){const el=document.getElementById("feedback");if(el)el.className="feedback";}
-function triggerEvent(){
- const effects=[{t:"⭐ Bonusfeld! +1 Punkt",d:1},{t:"🔧 Kleine Störung – 1 Punkt zurück",d:-1},{t:"🚦 Freie Fahrt! +2 Punkte",d:2},{t:"🛑 Halt! 1 Punkt zurück",d:-1}];
- const e=effects[Math.floor(Math.random()*effects.length)], p=turn; positions[p]+=e.d; eventMessage=e.t;
-}
-function renderResult(){
- const box=document.getElementById("resultBox"), content=document.getElementById("resultContent"); if(!box||!content)return;
- if(!winner){box.classList.remove("active");return;}
- const order=Array.from({length:activePlayers},(_,i)=>i).sort((a,b)=>positions[b]-positions[a]);
- content.innerHTML=order.map((i,n)=>{const s=stats[i]||{};const pct=s.answers?Math.round(s.correct/s.answers*100):0;return `<div style="padding:8px 0;border-bottom:1px solid #ddd"><b>${n+1}. ${playerNames[i]}</b> – ${positions[i]} Punkte · ${s.correct||0} richtig · ${s.wrong||0} falsch · ${pct}% Trefferquote · ${Math.round((s.time||0)/1000)} s Antwortzeit</div>`;}).join("");
- box.classList.add("active");
-}
-function playAgain(){
- if(onlineRoom){if(!onlineHost){alert("Nur der Host kann die nächste Runde starten.");return;} readyPlayers={}; for(const id of Object.keys(playerOwners))readyPlayers[id]=id===onlineId; gameStarted=false; winner=false; positions=[0,0,0,0]; turn=0; usedQuestions=[]; current=pickQuestion(); stats=[0,1,2,3].map(()=>({correct:0,wrong:0,time:0,answers:0})); syncOnline(); updateOnlineUI(); render(); renderPlayerProgressPanel(); updatePlayerProgress(); renderScoreboard(); renderScoreboard(); renderQuestion(); return;}
- setupLocalPlayers(document.getElementById("localPlayerCount")?.value||1); gameStarted=true; winner=false; positions=[0,0,0,0]; turn=0; usedQuestions=[]; current=pickQuestion(); stats=[0,1,2,3].map(()=>({correct:0,wrong:0,time:0,answers:0})); render(); renderPlayerProgressPanel(); updatePlayerProgress(); renderScoreboard(); renderScoreboard(); renderQuestion();
-}
-function syncOnline(){
-  if(onlineChannel && onlineRoom && onlineChannel.readyState===WebSocket.OPEN){
-    sendOnlineMessage("quiz_state",onlineSnapshot());
-    updateOnlineUI();
-  }
-}
-
-function loadQuestions(){try{const saved=JSON.parse(localStorage.getItem("quizbahn_questions"));if(!Array.isArray(saved))return defaultQuestions;const known=new Set(saved.map(q=>q.q));return saved.concat(defaultQuestions.filter(q=>!known.has(q.q)));}catch(e){return defaultQuestions}}
-function loadNames(){try{return JSON.parse(localStorage.getItem("quizbahn_names"))||["Spieler Rot","Spieler Blau","Spieler Grün","Spieler Gelb"]}catch(e){return ["Spieler Rot","Spieler Blau","Spieler Grün","Spieler Gelb"]}}
-function saveNames(){
-  playerNames=[0,1,2,3].map(i=>document.getElementById("name"+i).value.trim()||colors[i]);
-  localStorage.setItem("quizbahn_names",JSON.stringify(playerNames));
-  syncOnline();
-  render(); renderPlayerProgressPanel(); updatePlayerProgress(); renderScoreboard(); renderScoreboard();
-  alert("Spieler-Namen gespeichert.");
-}
-function saveQuestions(){
- try{
-  const v=JSON.parse(document.getElementById("questionEditor").value);
-  if(!Array.isArray(v)||!v.length) throw Error();
-  v.forEach((q,i)=>{
-    if(!q || typeof q.q!=="string" || !Array.isArray(q.a) ||
-       ![4,5].includes(q.a.length) ||
-       !Number.isInteger(Number(q.correct)) ||
-       Number(q.correct)<0 || Number(q.correct)>=q.a.length){
-      throw Error("Frage "+(i+1)+": Bitte 4 oder 5 Antworten und einen gültigen correct-Index angeben.");
-    }
-  });
-  questions=v; localStorage.setItem("quizbahn_questions",JSON.stringify(v));
-  current=0; renderQuestion(); syncOnline(); alert("Fragen gespeichert.");
- }catch(e){alert("Fehler: Bitte gültiges JSON eingeben.")}
-}
-function resetQuestions(){questions=defaultQuestions;localStorage.removeItem("quizbahn_questions");editor();renderQuestion()}
-function editor(){
- document.getElementById("questionEditor").value=JSON.stringify(questions,null,2);
- playerNames.forEach((n,i)=>document.getElementById("name"+i).value=n);
-}
-function setLocalPlayerCount(value){
-  const count=Math.max(1,Math.min(4,Number(value)||4));
-  if(onlineRoom){
-    if(!onlineHost){alert("Im Online-Raum kann nur der Host die Spieleranzahl ändern.");document.getElementById("localPlayerCount").value=activePlayers;return;}
-    activePlayers=count;
-    const kept={};
-    for(const [id,slot] of Object.entries(playerOwners)){
-      if(Number(slot)<count) kept[id]=slot;
-    }
-    playerOwners=kept;
-    localPlayerIndex=playerOwners[onlineId]!==undefined?Number(playerOwners[onlineId]):0;
-    clearHazardTimer();positions=[0,0,0,0];playerScores=[0,0,0,0];turn=0;winner=false; questionsWithoutBottle=[0,0,0,0]; bottlePower=[false,false,false,false];usedQuestions=[];current=0;hazardActive=false;hazardPlayer=-1;hazardQuestionIndex=-1;hazardDeadline=0;hazardMessage="";
-    render(); renderPlayerProgressPanel(); updatePlayerProgress(); renderScoreboard(); renderScoreboard();renderQuestion();syncOnline();
-    return;
-  }
-  activePlayers=count;
-  clearHazardTimer();positions=[0,0,0,0];playerScores=[0,0,0,0];turn=0;winner=false; questionsWithoutBottle=[0,0,0,0]; bottlePower=[false,false,false,false];usedQuestions=[];current=0;hazardActive=false;hazardPlayer=-1;hazardQuestionIndex=-1;hazardDeadline=0;hazardMessage="";
-  document.getElementById("localPlayerCount").value=String(count);
-  render(); renderPlayerProgressPanel(); updatePlayerProgress(); renderScoreboard(); renderScoreboard();renderQuestion();
-}
-function resetGame(){if(!onlineRoom){setupLocalPlayers(document.getElementById("localPlayerCount")?.value||1);} if(onlineRoom && !onlineHost){alert("Nur der Host kann das Spiel neu starten.");return;}clearHazardTimer();positions=[0,0,0,0];playerScores=[0,0,0,0];turn=0;winner=false; questionsWithoutBottle=[0,0,0,0]; bottlePower=[false,false,false,false];usedQuestions=[];current=0;hazardActive=false;hazardPlayer=-1;hazardQuestionIndex=-1;hazardDeadline=0;hazardMessage="";eventMessage="";stats=[0,1,2,3].map(()=>({correct:0,wrong:0,time:0,answers:0}));usedQuestions=[];gameStarted=!onlineRoom; if(onlineRoom){readyPlayers={};for(const id of Object.keys(playerOwners))readyPlayers[id]=id===onlineId;} render(); renderPlayerProgressPanel(); updatePlayerProgress(); renderScoreboard(); renderScoreboard();renderQuestion();syncOnline()}
-
-const JAHRESFRAGE={
-  q:"Wie schaltet man den Selbststellbetrieb aus?",
-  options:["SbAt","SbAt","Sbat","SbRt"],
-  answer:3,
-  special:true
-};
-function shouldAskJahresfrage(){
-  return Math.floor(Math.random()*100)===0;
-}
-
-function newQuestion(){
-  if(shouldAskJahresfrage()){
-    currentQuestion=JAHRESFRAGE;
-    currentQuestionStart=Date.now();
-    renderQuestion();
-    return;
-  }
-if(!gameStarted||!isMyTurn()||winner)return;current=pickQuestion();questionStartedAt=Date.now();hideFeedback();renderQuestion();syncOnline()}
-
-function isNpcPlayer(i){ return !!npcPlayers[i]; }
-function setupLocalPlayers(count){
-  npcMode=(Number(count)===1);
-  const nd=document.getElementById("npcDifficulty"); if(nd) npcDifficulty=nd.value;
-  npcPlayers=[false,false,false,false];
-  if(npcMode){
-    activePlayers=4;
-    playerNames[0]=playerNames[0]||"Spieler Rot";
-    playerNames[1]="🤖 Lokführer";
-    playerNames[2]="🤖 Zugchef";
-    playerNames[3]="🤖 Stellwerker";
-  }else{
-    activePlayers=count;
-  }
-}
-function getNpcSettings(){
-  return {
-    leicht:{correct:0.55,delay:1300,stepsBonus:0},
-    mittel:{correct:0.72,delay:900,stepsBonus:0},
-    schwer:{correct:0.88,delay:600,stepsBonus:0}
-  }[npcDifficulty] || {correct:0.72,delay:900,stepsBonus:0};
-}
-function scheduleNpcTurn(){
-  if(!gameStarted || winner || hazardActive || !npcMode || !isNpcPlayer(turn)) return;
-  const cfg=getNpcSettings();
-  setTimeout(runNpcTurn,cfg.delay);
-}
-function runNpcTurn(){
-  if(!gameStarted || winner || hazardActive || !npcMode || !isNpcPlayer(turn)) return;
-  const npcIndex=turn;
-  const npcName=playerNames[npcIndex];
-  const beforePos=positions[npcIndex];
-  addGameLog(`🤖 ${npcName} ist an der Reihe.`);
-  newQuestion();
-  const cfg=getNpcSettings();
-  setTimeout(()=>{
-    if(!gameStarted || winner || hazardActive || !isNpcPlayer(turn)) return;
-    const x=questions[current]||questions[0];
-    const correctChance=cfg.correct;
-    let choice;
-    if(Math.random()<correctChance){
-      choice=x.correct;
-    }else{
-      let a=Math.floor(Math.random()*x.a.length);
-      if(a===x.correct)a=(a+1)%x.a.length;
-      choice=a;
-    }
-    const answerText=(x.a && x.a[choice]!==undefined)?x.a[choice]:`Antwort ${choice+1}`;
-    const isCorrect=(choice===x.correct);
-    addGameLog(`🤖 ${npcName} wählt Antwort ${choice+1}: „${answerText}“${isCorrect?" ✅ RICHTIG":" ❌ FALSCH"}.`, isCorrect?"npc-correct":"npc-wrong");
-    const buttons=[...document.querySelectorAll("#answers button")];
-    answer(choice,buttons[choice]);
-    setTimeout(()=>{
-      const afterPos=positions[npcIndex];
-      if(afterPos!==beforePos){
-        const delta=afterPos-beforePos;
-        addGameLog(`🤖 ${npcName} bewegt sich ${delta>0?"+":""}${delta} Felder (${Math.floor(afterPos/TRACK_LENGTH)} Runden).`);
-      }else{
-        addGameLog(`🛑 🤖 ${npcName} bleibt stehen – die Spielfigur bewegt sich nicht!`, "npc-stayed");
-      }
-    },350);
-  },cfg.delay);
-}
-function isMyTurn(){
-  return gameStarted && (!onlineRoom || (localPlayerIndex>=0 && localPlayerIndex===turn));
-}
-function renderQuestion(){
- const x=questions[current]||{q:"",a:[],correct:0,steps:1};
- document.getElementById("question").textContent=x.q;
- const dl=document.getElementById("difficultyLabel"); if(dl)dl.textContent="Aktuell: "+({easy:"Leicht",medium:"Mittel",hard:"Schwer"}[getDifficulty(x)]||"Alle");
- const box=document.getElementById("answers");box.innerHTML="";
- const allowed=isMyTurn() && !winner && !hazardActive;
- x.a.forEach((ans,i)=>{
-   const b=document.createElement("button");
-   b.textContent=ans;
-   b.disabled=!allowed;
-   b.title=allowed?"Antwort auswählen":"Warte, bis du an der Reihe bist";
-   b.onclick=()=>answer(i,b);
-   box.appendChild(b);
- });
- if(hazardMessage){document.getElementById("status").textContent=hazardMessage;}
- else if(winner) document.getElementById("status").textContent="Das Spiel ist beendet.";
- else if(hazardActive) document.getElementById("status").textContent=hazardPlayer===localPlayerIndex?"🚧 Bahnübergang gestört – du musst die Zusatzfrage beantworten.":`🚧 ${playerNames[hazardPlayer]} bearbeitet die Störungsfrage.`;
- else if(onlineRoom && !gameStarted) document.getElementById("status").textContent="Lobby: Alle Spieler müssen bereit sein. Der Host startet das Spiel.";
- else if(onlineRoom && localPlayerIndex<0) document.getElementById("status").textContent="Du wirst gerade einem Spielerplatz zugewiesen…";
- else if(onlineRoom && !isMyTurn()) document.getElementById("status").textContent=`Warte auf ${playerNames[turn]}. Nur dieser Spieler darf antworten.`;
- else document.getElementById("status").textContent="Du bist dran – beantworte die Frage.";
- const nq=document.querySelector('.actions button[onclick="newQuestion()"]');
- if(nq)nq.disabled=!allowed;
- renderHazard();
-}
-function clearHazardTimer(){
- if(hazardTimerHandle){clearInterval(hazardTimerHandle);hazardTimerHandle=null;}
-}
-function crossingPassed(oldPos,newPos){
- for(let p=oldPos+1;p<=newPos;p++){
-   const mod=((p%TRACK_LENGTH)+TRACK_LENGTH)%TRACK_LENGTH;
-   for(const cp of crossingPositions){if(mod===cp)return cp;}
- }
- return null;
-}
-function startHazard(crossing){
- hazardActive=true;
- hazardPlayer=turn;
- hazardQuestionIndex=Math.floor(Math.random()*questions.length);
- hazardDeadline=Date.now()+60000;
- render(); renderPlayerProgressPanel(); updatePlayerProgress(); renderScoreboard(); renderScoreboard();
- renderQuestion();
- syncOnline();
- clearHazardTimer();
- hazardTimerHandle=setInterval(()=>{
-   const remaining=Math.max(0,Math.ceil((hazardDeadline-Date.now())/1000));
-   const el=document.getElementById("hazardTimer");if(el)el.textContent=remaining;
-   if(remaining<=0){clearHazardTimer();if(hazardActive && hazardPlayer===turn)finishHazard(false,true);}
- },200);
-}
-function renderHazard(){
- const box=document.getElementById("hazardBox"), q=document.getElementById("hazardQuestion"), answers=document.getElementById("hazardAnswers"), status=document.getElementById("hazardStatus"), timer=document.getElementById("hazardTimer");
- if(!box||!q||!answers)return;
- if(!hazardActive){box.classList.remove("active");clearHazardTimer();return;}
- box.classList.add("active");
- const x=questions[hazardQuestionIndex]||questions[0];
- q.textContent=x.q;
- answers.innerHTML="";
- const allowed=hazardPlayer===localPlayerIndex && !winner;
- x.a.forEach((ans,i)=>{
-   const b=document.createElement("button");b.textContent=ans;b.disabled=!allowed;b.onclick=()=>answerHazard(i,b);answers.appendChild(b);
- });
- const remaining=Math.max(0,Math.ceil((hazardDeadline-Date.now())/1000));
- timer.textContent=remaining;
- status.textContent=allowed?"":"Der aktive Spieler beantwortet die Störungsfrage…";
- if(allowed && !hazardTimerHandle){
-   hazardTimerHandle=setInterval(()=>{const rem=Math.max(0,Math.ceil((hazardDeadline-Date.now())/1000));timer.textContent=rem;if(rem<=0){clearHazardTimer();finishHazard(false,true);}},200);
- }
-}
-function finishHazard(correct,timedOut=false){
- if(!hazardActive || hazardPlayer<0)return;
- const p=hazardPlayer;
- clearHazardTimer();
- hazardActive=false;hazardQuestionIndex=-1;hazardDeadline=0;
- if(correct){
-   hazardMessage="✅ Bahnübergang gesichert – weiter geht es.";
- }else{
-   positions[p]=Math.max(0,positions[p]-1);
-   hazardMessage="⚠️ BETRIEBSGEFAHR – eine Station zurück.";
- }
- turn=(turn+1)%activePlayers;
- hazardPlayer=-1;
- render(); renderPlayerProgressPanel(); updatePlayerProgress(); renderScoreboard(); renderScoreboard();renderQuestion();syncOnline();
- setTimeout(()=>{hazardMessage="";renderQuestion();syncOnline();},2500);
- if(!winner){setTimeout(()=>{if(isMyTurn())newQuestion(); else if(isNpcPlayer(turn))scheduleNpcTurn();},800);}
-}
-function answerHazard(i,button){
- if(!hazardActive || hazardPlayer!==localPlayerIndex)return;
- const x=questions[hazardQuestionIndex]||questions[0], buttons=[...document.querySelectorAll("#hazardAnswers button")];
- buttons.forEach(b=>b.disabled=true);
- if(i===x.correct){button.classList.add("correct");finishHazard(true,false);}
- else{button.classList.add("wrong");if(buttons[x.correct])buttons[x.correct].classList.add("correct");finishHazard(false,false);}
-}
-function answer(i,button){
- if(!gameStarted || (!isMyTurn() && !isNpcPlayer(turn)) || winner || hazardActive)return;
- const x=questions[current], buttons=[...document.querySelectorAll("#answers button")];
- buttons.forEach(b=>b.disabled=true);
- const elapsed=Date.now()-questionStartedAt; const st=stats[turn]||{correct:0,wrong:0,time:0,answers:0}; st.answers++; st.time+=elapsed;
- if(i===x.correct){
-   st.correct++;
-   questionsWithoutBottle[turn]++;
-   if(questionsWithoutBottle[turn]>=4){
-     bottlePower[turn]=true;
-   }
-   button.classList.add("correct");
-   const steps=Math.max(1,Number(x.steps)||1), oldPos=positions[turn];
-   positions[turn]+=steps;
-    if(positions[turn]%TRACK_LENGTH===0){
-      const completed=Math.floor(positions[turn]/TRACK_LENGTH);
-      addGameLog(`${playerNames[turn]} hat Runde ${completed} von ${WIN_LAPS} abgeschlossen.`);
-    }
-
-   const speedBonus=elapsed<=5000?1:0;
-   if(speedBonus){positions[turn]+=speedBonus; showFeedback(`⚡ <b>Zeitbonus!</b> Antwort in ${Math.round(elapsed/100)/10} s – +1 Punkt.`);}
-   document.getElementById("status").textContent=`Richtig! ${playerNames[turn]} fährt ${steps+speedBonus} Station${steps+speedBonus===1?"":"en"} weiter.`;
-   if(!speedBonus)showFeedback(`✅ <b>Richtig!</b> Richtige Antwort: ${x.a[x.correct]||""}${x.explanation?`<br><br>📘 ${x.explanation}`:""}`);
-   if(positions[turn]>=WIN_LAPS*TRACK_LENGTH){winner=true;document.getElementById("status").textContent=`🏆 ${playerNames[turn]} gewinnt nach ${WIN_LAPS} Runden!`;}
-   else {
-     const cp=crossingPassed(oldPos,positions[turn]);
-     if(eventPositions.includes(((positions[turn]%TRACK_LENGTH)+TRACK_LENGTH)%TRACK_LENGTH) && Math.random()<0.5){triggerEvent();}
-     if(cp!==null && Math.random()<1/3){startHazard(cp);return;}
-     turn=(turn+1)%activePlayers;
-   }
- }else{
-   st.wrong++;
-   awardScore(turn,-1,"falsche Antwort");
-   questionsWithoutBottle[turn]=0;
-   bottlePower[turn]=false;
-   addGameLog(`${playerNames[turn]} hat eine falsche Antwort gegeben – die 🍾-Fähigkeit verfällt.`);
-   button.classList.add("wrong");if(buttons[x.correct])buttons[x.correct].classList.add("correct");
-   document.getElementById("status").textContent="Leider falsch – der Zug bleibt stehen.";
-   showFeedback(`❌ <b>Falsch.</b> Richtige Antwort: ${x.a[x.correct]||""}${x.explanation?`<br><br>📘 ${x.explanation}`:""}`);
-   turn=(turn+1)%activePlayers;
- }
- render(); renderPlayerProgressPanel(); updatePlayerProgress(); renderScoreboard(); renderScoreboard(); renderResult(); syncOnline();
- if(eventMessage){document.getElementById("status").textContent=eventMessage;eventMessage="";}
- if(!winner)setTimeout(()=>{if(isMyTurn())newQuestion();},800);
-}
-
-function addGameLog(message, cssClass=""){
-  const log=document.getElementById("eventLog");
-  if(!log)return;
-  const row=document.createElement("div");
-  row.className=`log-entry ${cssClass}`.trim();
-  row.textContent=`${new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})} – ${message}`;
-  log.prepend(row);
-  while(log.children.length>20) log.removeChild(log.lastChild);
-}
-function updatePlayerProgress(){
-  const cards=document.querySelectorAll("[data-player-card]");
-  cards.forEach(card=>{
-    const i=Number(card.dataset.playerCard);
-    if(!Number.isInteger(i) || i>=activePlayers)return;
-    const rounds=Math.min(WIN_LAPS,Math.floor(positions[i]/TRACK_LENGTH));
-    const field=((positions[i]%TRACK_LENGTH)+TRACK_LENGTH)%TRACK_LENGTH;
-    const pct=Math.max(0,Math.min(100,(positions[i]/(WIN_LAPS*TRACK_LENGTH))*100));
-    const rp=card.querySelector(".round-progress");
-    if(rp)rp.textContent=`Runden: ${rounds} / ${WIN_LAPS} · Feld: ${field} / ${TRACK_LENGTH}`;
-    const fill=card.querySelector(".progress-fill");
-    if(fill)fill.style.width=`${pct}%`;
-    const bp=card.querySelector(".bottle-progress");
-    if(bp)bp.textContent=`🍾 Ohne Flasche: ${Math.min(4,questionsWithoutBottle[i])} / 4`;
-    const ab=card.querySelector(".ability-state");
-    if(ab)ab.innerHTML=bottlePower[i]?`<span class="ability-ready">🍾 Fähigkeit bereit!</span>`:"";
-  });
-}
-function updateHazardTimerUI(){
-  const el=document.getElementById("hazardTimer");
-  if(!el || !hazardDeadline)return;
-  const left=Math.max(0,Math.ceil((hazardDeadline-Date.now())/1000));
-  el.classList.toggle("timer-warning",left<=10);
-  if(left<=10 && left>0) el.textContent=`⚠️ ${left}`;
-}
-
-
-
-
-function awardScore(playerIndex, amount, reason){
-  playerScores[playerIndex]=(playerScores[playerIndex]||0)+amount;
-  addGameLog(`${amount>0?"⭐":"➖"} ${playerNames[playerIndex]} ${amount>0?"erhält":"verliert"} ${Math.abs(amount)} Punkt${Math.abs(amount)===1?"":"e"}${reason?` (${reason})`:""}.`);
-}
-
-function renderScoreboard(){
-  const el=document.getElementById("scoreboardContent");
-  if(!el)return;
-  const rows=[];
-  for(let i=0;i<activePlayers;i++){
-    const rounds=Math.floor(positions[i]/TRACK_LENGTH);
-    const field=((positions[i]%TRACK_LENGTH)+TRACK_LENGTH)%TRACK_LENGTH;
-    const pct=Math.max(0,Math.min(100,(positions[i]/(WIN_LAPS*TRACK_LENGTH))*100));
-    const correct=stats[i]?.correct||0;
-    const wrong=stats[i]?.wrong||0;
-    const total=correct+wrong;
-    const accuracy=total?Math.round(correct/total*100):0;
-    const npc=isNpcPlayer(i)?"🤖 ":"";
-    const active=i===turn;
-    rows.push({i,rounds,field,pct,correct,wrong,accuracy,npc,active});
-  }
-  // Current player first, then by completed rounds/position.
-  rows.sort((a,b)=>b.rounds-a.rounds || b.field-a.field || b.correct-a.correct);
-  el.innerHTML=`<table class="scoreboard-table">
-    <thead><tr>
-      <th>Spieler</th><th>Punkte</th><th>Runden</th><th>Feld</th><th>Fortschritt</th><th>Richtig</th><th>Falsch</th><th>Quote</th><th>Status</th>
-    </tr></thead>
-    <tbody>${rows.map(r=>{
-      const roundText=r.rounds<0?`${r.rounds} / ${WIN_LAPS}`:`${r.rounds} / ${WIN_LAPS}`;
-      const status=r.active?"🎯 Am Zug":(r.i<activePlayers?"":"");
-      const cls=`${r.active?"scoreboard-current scoreboard-active ":""}${r.rounds<0?"scoreboard-negative":""}`;
-      return `<tr class="${cls}">
-        <td>${r.npc}${playerNames[r.i]}</td>
-        <td><strong>${playerScores[r.i]||0}</strong></td>
-        <td><strong>${roundText}</strong></td>
-        <td>${r.field} / ${TRACK_LENGTH}</td>
-        <td><div class="scoreboard-bar"><div class="scoreboard-fill" style="width:${r.pct}%"></div></div></td>
-        <td>${r.correct}</td><td>${r.wrong}</td><td>${r.accuracy}%</td><td>${status}</td>
-      </tr>`;
-    }).join("")}</tbody>
-  </table>`;
-  saveQuizbahnState();
-}
-
-function renderPlayerProgressPanel(){
-  const panel=document.getElementById("playerProgressPanel");
-  if(!panel)return;
-  panel.innerHTML="";
-  for(let i=0;i<activePlayers;i++){
-    const rounds=Math.min(WIN_LAPS,Math.floor(positions[i]/TRACK_LENGTH));
-    const field=((positions[i]%TRACK_LENGTH)+TRACK_LENGTH)%TRACK_LENGTH;
-    const pct=Math.max(0,Math.min(100,(positions[i]/(WIN_LAPS*TRACK_LENGTH))*100));
-    const bottle=Math.min(4,questionsWithoutBottle[i]);
-    const ability=bottlePower[i]?"<span class='ability-ready'>🍾 Fähigkeit bereit!</span>":"";
-    const row=document.createElement("div");
-    row.className="player-progress";
-    row.innerHTML=`<div><strong>${playerNames[i]}</strong> – <b>Runden: ${rounds} / ${WIN_LAPS}</b> · Feld ${field}/${TRACK_LENGTH} ${ability}</div>
-      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
-      <div class="bottle-progress">🍾 Ohne Flasche: ${bottle} / 4</div>`;
-    panel.appendChild(row);
-  }
-}
-
-function render(){
- document.getElementById("turnText").textContent=winner?"Spiel beendet":hazardActive?`🚧 Störung bei ${playerNames[hazardPlayer]}`:`Am Zug: ${playerNames[turn]} • Punkt`;
- document.getElementById("currentPlayer").textContent=winner?`🏆 Gewinner: ${playerNames[turn]} – ${WIN_LAPS} Runden`:hazardActive?`🚧 ${playerNames[hazardPlayer]} muss die Störungsfrage lösen`:`🎯 ${playerNames[turn]} ist jetzt dran${isNpcPlayer(turn)?" 🤖":""} · ${Math.floor(positions[turn]/TRACK_LENGTH)} von ${WIN_LAPS} Runden${bottlePower[turn]?" · 🍾 Rückschick-Fähigkeit bereit":""}`;
- const score=document.getElementById("score");
- score.innerHTML=colors.slice(0,activePlayers).map((c,i)=>{const completedLaps=Math.min(WIN_LAPS,Math.floor(positions[i]/TRACK_LENGTH));return `<div class="p${i}"><b>● ${playerNames[i]}</b><br>${c} · <strong>Runden abgeschlossen: ${completedLaps} / ${WIN_LAPS}</strong><br>${positions[i]%TRACK_LENGTH}/20 Felder${i===localPlayerIndex?" · <strong>DU</strong>":""}</div>`;}).join("");
- const sel=document.getElementById("localPlayerCount");
- if(sel) sel.value=String(activePlayers);
- const hint=document.getElementById("localModeHint");
- if(hint) hint.textContent=onlineRoom ? (onlineHost?"Der Host legt die Spieleranzahl fest.":"Die Spieleranzahl wird vom Host festgelegt.") : "Einzelspieler mit 3 NPCs oder 2–4 Spieler am selben Gerät.";
- drawCrossings();drawEventMarkers();drawTokens();renderResult();
-  const startBtn=document.getElementById("startBtn"); if(startBtn)startBtn.style.display=onlineHost?"inline-block":"none";
-}
-function drawCrossings(){
- const board=document.getElementById("board");if(!board)return;
- crossingPositions.forEach((p,idx)=>{
-   const el=document.getElementById("crossing"+idx);if(!el)return;
-   const angle=(p*18-90)*Math.PI/180, r=34;
-   const x=50+r*Math.cos(angle), y=50+r*Math.sin(angle);
-   el.style.left=x+"%";el.style.top=y+"%";
- });
-}
-
-function drawEventMarkers(){
- const board=document.getElementById("board");if(!board)return;
- document.querySelectorAll(".event-marker").forEach(x=>x.remove());
- eventPositions.forEach((p,idx)=>{const angle=(p*18-90)*Math.PI/180,r=34;let x=50+r*Math.cos(angle),y=50+r*Math.sin(angle);/* Linken Stern aus dem Bereich des Bahnhofsschilds verschieben. */if(p===15){x=8;y=38;}const el=document.createElement("div");el.className="event-marker";el.textContent="⭐";el.title="Ereignisfeld";el.style.cssText=`position:absolute;left:${x}%;top:${y}%;transform:translate(-50%,-50%);z-index:3;font-size:22px;text-shadow:0 2px 4px #0006`;board.appendChild(el);});
-}
-function drawTokens(){
- const board=document.getElementById("board");
- document.querySelectorAll(".token").forEach(x=>x.remove());
- positions.slice(0,activePlayers).forEach((p,i)=>{
-   const angle=(starts[i]+p*18)%360, rad=(angle-90)*Math.PI/180;
-   const r=34;
-   const x=50+r*Math.cos(rad), y=50+r*Math.sin(rad);
-   const t=document.createElement("div");t.className=`token t${i}`;t.textContent="";
-   t.title=playerNames[i]+" – "+positions[i]+" Punkte";
-   t.style.left=`calc(${x}% - 15px)`;t.style.top=`calc(${y}% - 15px)`;
-   board.appendChild(t);
- });
-}
-if(!restoredSavedGame){gameStarted=true; current=pickQuestion();} questionStartedAt=Date.now(); editor();render(); renderPlayerProgressPanel(); updatePlayerProgress(); renderScoreboard(); renderQuestion();autoJoinRoomFromUrl();
-window.addEventListener("pageshow", function(e){ if(e.persisted){ window.location.reload(); } });
-</script>
-
-<section id="gameInstructions" class="cardboard-guide" aria-labelledby="guideTitle">
-  <header class="guide-header">
-    <div class="guide-kicker">🚂 GUT ZU WISSEN</div>
-    <h2 id="guideTitle">📖 So funktioniert die DB Quiz-Bahn</h2>
-    <p>Alle Spielregeln auf einen Blick – damit die nächste Runde direkt losgehen kann.</p>
-  </header>
-  <div class="guide-facts">
-    <div class="guide-fact"><span class="fact-icon">👥</span><span><small>Spieler</small><strong>1 bis 4</strong></span></div>
-    <div class="guide-fact"><span class="fact-icon">🏁</span><span><small>Spielziel</small><strong>7 vollständige Runden</strong></span></div>
-    <div class="guide-fact"><span class="fact-icon">❓</span><span><small>Fragetyp</small><strong>Multiple Choice</strong></span></div>
-  </div>
-  <div class="guide-grid">
-    <article class="guide-card guide-card-wide"><div class="guide-card-title"><span>🚦</span><h3>1. Spielablauf</h3></div>
-      <p>Reihum beantwortet der aktuell aktive Spieler eine Multiple-Choice-Frage. Bei einer richtigen Antwort fährt die eigene Spielfigur weiter. Bei einer falschen Antwort bleibt die Spielfigur stehen; die nächste Chance gibt es erst, wenn der Spieler wieder an der Reihe ist.</p>
-    </article>
-    <article class="guide-card"><div class="guide-card-title"><span>🤖</span><h3>2. Einzelspieler-Modus</h3></div>
-      <p>Im Einzelspieler-Modus trittst du gegen <strong>3 NPC-Spieler</strong> an. Die NPCs beantworten ihre Fragen automatisch und führen ihre Züge selbstständig aus.</p>
-      <p class="guide-subtitle">NPC-Schwierigkeiten</p>
-      <ul class="difficulty-list">
-        <li><span>🟢 <strong>Leicht</strong></span><b>ca. 55 % richtige Antworten</b></li>
-        <li><span>🟡 <strong>Mittel</strong></span><b>ca. 72 % richtige Antworten</b></li>
-        <li><span>🔴 <strong>Schwer</strong></span><b>ca. 88 % richtige Antworten</b></li>
-      </ul>
-    </article>
-    <article class="guide-card"><div class="guide-card-title"><span>📝</span><h3>3. Richtige und falsche Antworten</h3></div>
-      <ul class="rule-list">
-        <li><span class="rule-mark good">✓</span><span><strong>Richtig:</strong> Der Zug wird entsprechend der Frage weiterbewegt.</span></li>
-        <li><span class="rule-mark bad">×</span><span><strong>Falsch:</strong> Die Spielfigur bewegt sich nicht. Es gibt keinen weiteren Versuch im selben Zug.</span></li>
-      </ul>
-    </article>
-    <article class="guide-card"><div class="guide-card-title"><span>🍾</span><h3>4. Flaschen-Regel</h3></div>
-      <p>Wer <strong>4 Fragen ohne eine Flasche</strong> beantwortet hat, erhält einmalig die Möglichkeit, einen anderen Spieler auf <strong>START</strong> zurückzuschicken. Die verfügbare Fähigkeit wird im Spielerfortschritt angezeigt.</p>
-    </article>
-    <article class="guide-card"><div class="guide-card-title"><span>🚧</span><h3>5. Bahnübergänge</h3></div>
-      <p>Bei einer Bahnübergangsstörung erscheint eine Zusatzfrage. Dafür stehen <strong>60 Sekunden</strong> zur Verfügung. Bei falscher Antwort oder Ablauf der Zeit tritt die jeweilige Störung ein.</p>
-    </article>
-    <article class="guide-card"><div class="guide-card-title"><span>⭐</span><h3>6. Ereignisfelder</h3></div>
-      <p>Auf Ereignisfeldern können zufällige Ereignisse ausgelöst werden. Die Auswirkungen werden direkt im Spiel angezeigt.</p>
-    </article>
-    <article class="guide-card"><div class="guide-card-title"><span>🏅</span><h3>7. Punktesystem</h3></div>
-      <ul class="points-list">
-        <li><span>✅ Richtige Antwort</span><strong class="points-plus">+2 Punkte</strong></li>
-        <li><span>❌ Falsche Antwort</span><strong class="points-minus">−1 Punkt</strong></li>
-      </ul>
-      <p class="guide-note">🌟 Die Punkte werden unabhängig von Runden und Feldern im Scoreboard angezeigt.</p>
-    </article>
-    <article class="guide-card guide-finish"><div class="guide-card-title"><span>🏆</span><h3>8. Spielende</h3></div>
-      <p>Wer zuerst <strong>7 vollständige Runden</strong> erreicht, gewinnt das Spiel. Durch Ereignisse kann ein Spieler dabei auch in einen <strong>negativen Rundenstand</strong> geraten.</p>
-    </article>
-  </div>
-  <footer class="guide-footer">🚆 Viel Erfolg und gute Fahrt!</footer>
-</section>
-
-
-<script>
-function setLayoutMode(mode){
-  const allowed=["auto","tablet","mobile"];
-  if(!allowed.includes(mode)) mode="auto";
-  document.body.classList.remove("layout-auto","layout-tablet","layout-mobile");
-  document.body.classList.add("layout-"+mode);
-  document.querySelectorAll(".device-switch button[data-layout]").forEach(button=>{
-    button.setAttribute("aria-pressed",String(button.dataset.layout===mode));
-  });
-  try{localStorage.setItem("quizbahn-layout",mode);}catch(e){}
-}
-document.addEventListener("DOMContentLoaded",()=>{
-  let saved="auto";
-  try{saved=localStorage.getItem("quizbahn-layout")||"auto";}catch(e){}
-  setLayoutMode(saved);
-});
-</script>
-<script>setInterval(updateHazardTimerUI,250);</script>
-<script>
-window.addEventListener("load",()=>{
-  renderPlayerProgressPanel();
-  updatePlayerProgress();
-  renderScoreboard();
-  addGameLog("Spiel gestartet. Ziel: 7 vollständige Runden.");
-});
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded",()=>{
-  const count=document.getElementById("localPlayerCount");
-  const diff=document.getElementById("npcDifficulty");
-  const wrap=document.getElementById("npcDifficultyWrap");
-  function updateNpcDifficultyVisibility(){
-    if(!count||!wrap)return;
-    wrap.style.display=(count.value==="1")?"inline-block":"none";
-    if(diff) npcDifficulty=diff.value;
-  }
-  if(count) count.addEventListener("change",updateNpcDifficultyVisibility);
-  if(diff) diff.addEventListener("change",()=>{npcDifficulty=diff.value;});
-  updateNpcDifficultyVisibility();
-});
-</script>
-<section id="scoreboardPanel" class="scoreboard-panel" hidden aria-hidden="true">
-  <h3>🏆 Scoreboard</h3>
-  <p id="scoreboardSaveStatus" style="margin:0 0 10px;color:#397044;font-weight:700;font-size:.9em">✓ Spielstand wird automatisch gespeichert</p>
-  <div id="scoreboardContent"></div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-    <button type="button" onclick="saveQuizbahnState();alert('Spielstand und Scoreboard wurden auf diesem Gerät gespeichert.')" style="border:2px solid #80552f;border-radius:10px;padding:9px 13px;background:#f5e2bf;color:#51351f;font-weight:800">💾 Jetzt speichern</button>
-    <button type="button" onclick="if(confirm('Gespeicherten Spielstand wirklich löschen?')){localStorage.removeItem(QUIZBAHN_SAVE_KEY);location.reload();}" style="border:2px solid #80552f;border-radius:10px;padding:9px 13px;background:#fff4e3;color:#51351f;font-weight:800">↺ Gespeicherten Stand löschen</button>
-  </div>
-</section>
-
-
+<!-- Reihenfolge wichtig: Einstellungen, Fragen, Bibliotheken, dann Spiel -->
+<script src="js/config.js"></script>
+<script src="server-info.js" onerror="void 0"></script><!-- nur vom eigenen Server ausgeliefert -->
+<script src="data/fragen.js"></script>
+<script src="js/qrcode.js"></script>
+<script src="js/basis.js"></script>
+<script src="js/netz.js"></script>
+<script src="js/klasse-beamer.js"></script>
+<script src="js/klasse-handy.js"></script>
+<script src="js/reihum.js"></script>
+<script src="js/lehrkraft.js"></script>
+<script src="js/start.js"></script>
 </body>
 </html>
