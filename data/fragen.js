@@ -318,7 +318,7 @@ window.QB_FRAGEN = [
  {
   "id": "F022",
   "thema": "Prüfungsfragen der Klasse",
-  "d": "medium",
+  "d": "easy",
   "q": "Welche Regelwerksfamilie enthält die Fahrdienstvorschrift?",
   "a": [
    "Ril 100",
@@ -331,7 +331,7 @@ window.QB_FRAGEN = [
  {
   "id": "F023",
   "thema": "Prüfungsfragen der Klasse",
-  "d": "medium",
+  "d": "easy",
   "q": "Was bedeutet die Abkürzung Fdl?",
   "a": [
    "Fahrdienstleiter",
@@ -344,7 +344,7 @@ window.QB_FRAGEN = [
  {
   "id": "F024",
   "thema": "Prüfungsfragen der Klasse",
-  "d": "medium",
+  "d": "easy",
   "q": "Was bedeutet die Abkürzung Tf?",
   "a": [
    "Technischer Fahrplan",
@@ -357,7 +357,7 @@ window.QB_FRAGEN = [
  {
   "id": "F025",
   "thema": "Prüfungsfragen der Klasse",
-  "d": "medium",
+  "d": "easy",
   "q": "Wofür steht EIU?",
   "a": [
    "Eisenbahn-Infrastrukturunternehmen",
@@ -370,7 +370,7 @@ window.QB_FRAGEN = [
  {
   "id": "F026",
   "thema": "Prüfungsfragen der Klasse",
-  "d": "medium",
+  "d": "easy",
   "q": "Wofür steht EVU?",
   "a": [
    "Eisenbahn-Verkehrsunternehmen",
@@ -383,7 +383,7 @@ window.QB_FRAGEN = [
  {
   "id": "F027",
   "thema": "Prüfungsfragen der Klasse",
-  "d": "medium",
+  "d": "easy",
   "q": "Was bedeutet PZB?",
   "a": [
    "Punktförmige Zugbeeinflussung",
@@ -396,7 +396,7 @@ window.QB_FRAGEN = [
  {
   "id": "F028",
   "thema": "Prüfungsfragen der Klasse",
-  "d": "medium",
+  "d": "easy",
   "q": "Was bedeutet LZB?",
   "a": [
    "Linienförmige Zugbeeinflussung",
@@ -409,7 +409,7 @@ window.QB_FRAGEN = [
  {
   "id": "F029",
   "thema": "Prüfungsfragen der Klasse",
-  "d": "medium",
+  "d": "easy",
   "q": "Wofür steht BÜ?",
   "a": [
    "Bahnübergang",
@@ -422,7 +422,7 @@ window.QB_FRAGEN = [
  {
   "id": "F030",
   "thema": "Prüfungsfragen der Klasse",
-  "d": "medium",
+  "d": "easy",
   "q": "Was bedeutet Asig?",
   "a": [
    "Ausfahrsignal",
@@ -449,7 +449,7 @@ window.QB_FRAGEN = [
  {
   "id": "F032",
   "thema": "Prüfungsfragen der Klasse",
-  "d": "medium",
+  "d": "easy",
   "q": "Wofür steht Ggl?",
   "a": [
    "Gegengleis",
@@ -463,7 +463,7 @@ window.QB_FRAGEN = [
  {
   "id": "F033",
   "thema": "Prüfungsfragen der Klasse",
-  "d": "medium",
+  "d": "easy",
   "q": "Was bedeutet Rp im betrieblichen Zusammenhang?",
   "a": [
    "Räumungsprüfung",
@@ -479,7 +479,7 @@ window.QB_FRAGEN = [
  {
   "id": "F034",
   "thema": "Prüfungsfragen der Klasse",
-  "d": "medium",
+  "d": "easy",
   "q": "Was bedeutet Ww?",
   "a": [
    "Weichenwärter",
@@ -1545,5 +1545,121 @@ window.QB_FRAGEN = [
   "correct": 0,
   "ex": "Personen am Gleis: Tf mündlich beauftragen, darauf zu achten und zu berichten; Nachbar-Fdl benachrichtigen. Aufheben, wenn der zuletzt gefahrene Zug keine Personen mehr meldet. Gibt es Hinweise auf Hilflosigkeit, wie bei Kindern verfahren.",
   "src": "Ril 408.0581A01 (Handlungsanweisung Personen im/am Gleis)"
- }
+ },
+ {
+  "id": "F101",
+  "thema": "Abweichungen vom Regelbetrieb (LF 8)",
+  "d": "medium",
+  "hz": false,
+  "q": "Welche Befehle sollen beim letzten planmäßigen Halt übermittelt werden?",
+  "a": [
+   "1, 21, 22, 23, 24",
+   "23, 24",
+   "5, 6, 8, 9, 95.10, 95.95",
+   "1, 23, 24",
+   "23, 24, 32"
+  ],
+  "correct": 2,
+  "src": "Ril 408.0411 Abschnitt 2.4 (Ort der Befehlsübermittlung)"
+ },
+ {
+  "id": "F102",
+  "thema": "Abweichungen vom Regelbetrieb (LF 9)",
+  "d": "medium",
+  "hz": false,
+  "q": "In welchem Fall ist das Gleis zu erkunden?",
+  "a": [
+   "Herabhängende Oberleitung",
+   "Der bösartige Gnom beobachtet das Gleis",
+   "Kinder am Gleis",
+   "liegengebliebender Zug",
+   "extreme Schneehöhen"
+  ],
+  "correct": 4,
+  "ex": "Wenn wetterbedingte oder ander gefahdrohende Umstände (Stürme, Eisregen, extreme Schneehöhen, Brände, Abfragen eines Notrufes nicht möglich, Tiere usw.) befürchten lassen, dass Gleise nicht ohne Gefahr befahren werden können, sind sie zu erkunden.",
+  "src": "Ril 408.0541 (Gefahrdrohende Umstände)"
+ },
+ {
+  "id": "F103",
+  "thema": "Abweichungen vom Regelbetrieb (LF 8)",
+  "d": "medium",
+  "hz": true,
+  "q": "In welchen Fällen hat der Tf NICHT sofort anzuhalten und den Fdl zu verständigen?",
+  "a": [
+   "Unzulässige Vorbeifahrt an einem Halt zeigenden Signal",
+   "Fahrzeug fängt auf einer Brückenanlage Feuer",
+   "PZB-Zwangsbremsung an einem Hauptsignal, das Kennlicht zeigt",
+   "PZB-Zwangsbremsung an einem Hauptsignal, das Fahrtstellung zeigt",
+   "Vorbeifahrt an einer Stelle, an der nach Befehl zu halten gewesen wäre"
+  ],
+  "correct": 1,
+  "ex": "Auf einer Brücke zu halten könnte Rettung erschweren und die Gefahr vergrößern.",
+  "src": "Ril 408.0531 (Unzulässiges Vorbeifahren)"
+ },
+ {
+  "id": "F104",
+  "thema": "Abweichungen vom Regelbetrieb (LF 8)",
+  "d": "hard",
+  "hz": false,
+  "q": "Wie lautet der Wortlaut für eine Sturmwarnung?",
+  "a": [
+   "Sturmwarnung, Sturmwarnung, Sturmwarnung! Alle Züge zwischen ... (Betriebsstelle) und ... (Betriebsstelle) sofort anhalten.",
+   "Achtung, Sturmwarnung! Fahren Sie zwischen ... (Betriebsstelle) und ... (Betriebsstelle) mit höchstens 80 km/h.",
+   "Sturmwarnung! Zwischen ... (Betriebsstelle) und ... (Betriebsstelle) fahren Sie mit höchstens 50 km/h.",
+   "Achtung, Sturmwarnung! 80 km/h sind auf der freien Strecke zwischen ... (Betriebsstelle) und ... (Betriebsstelle) nicht zu überschreiten!",
+   "O Mighty Zeus, your anger roars; Casting whelm each ravaging storm; Is your ire so driven as to show disdain, Of nights for those so worn? Flee, flee all you children of the earth!"
+  ],
+  "correct": 1,
+  "src": "Ril 408.0541 (Gefahrdrohende Umstände)"
+ },
+ {
+  "id": "F105",
+  "thema": "Abweichungen vom Regelbetrieb (LF 8)",
+  "d": "hard",
+  "hz": true,
+  "q": "Auf welcher Strecke der Deutschen Bahn muss bei kalter Witterung nicht auf herabfallende Eisstücke geachtet werden?",
+  "a": [
+   "Hannover – Würzburg",
+   "Hamburg – Berlin",
+   "Mannheim – Stuttgart",
+   "Hannover – Berlin",
+   "Köln – Mainz"
+  ],
+  "correct": 4,
+  "src": "Ril 408.0591 (Sonstige Unregelmäßigkeit im Bahnbetrieb)"
+ },
+ {
+  "id": "F106",
+  "thema": "Abweichungen vom Regelbetrieb (LF 8)",
+  "d": "medium",
+  "hz": false,
+  "q": "?",
+  "a": [
+   "",
+   "",
+   "",
+   "",
+   ""
+  ],
+  "correct": 0,
+  "ex": "",
+  "src": "Ril 408. ()"
+ },
+ {
+  "id": "F107",
+  "thema": "Abweichungen vom Regelbetrieb (LF 8)",
+  "d": "medium",
+  "hz": false,
+  "q": "?",
+  "a": [
+   "",
+   "",
+   "",
+   "",
+   ""
+  ],
+  "correct": 0,
+  "ex": "",
+  "src": "Ril 408. ()"
+ },
 ];
